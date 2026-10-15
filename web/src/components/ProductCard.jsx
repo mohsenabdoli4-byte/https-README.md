@@ -40,7 +40,8 @@ export default function ProductCard({ product, compact = false }) {
 
   return (
     <article className="group card flex h-full flex-col overflow-hidden">
-      <Link to={`/product/${product.slug}`} className="relative block overflow-hidden">
+      <div className="relative overflow-hidden">
+        <Link to={`/product/${product.slug}`} className="block">
         <img
           src={product.image_url}
           alt={product.name}
@@ -55,6 +56,7 @@ export default function ProductCard({ product, compact = false }) {
           {product.is_seasonal && <span className="chip bg-strawberry text-cocoa">Seasonal</span>}
           {!product.in_stock && <span className="chip bg-white text-muted">Sold out</span>}
         </div>
+        </Link>
         <div className="absolute right-3 top-3 flex flex-col gap-2 opacity-0 transition group-hover:opacity-100">
           <button
             onClick={wishlist}
@@ -71,7 +73,7 @@ export default function ProductCard({ product, compact = false }) {
             <Eye className="h-4 w-4" />
           </Link>
         </div>
-      </Link>
+      </div>
 
       <div className="flex flex-1 flex-col p-5">
         <div className="flex items-start justify-between gap-3">
