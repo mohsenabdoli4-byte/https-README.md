@@ -1,0 +1,94 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-cream text-cocoa font-sans antialiased;
+}
+
+*:focus-visible {
+  @apply outline-none ring-2 ring-rose ring-offset-2 ring-offset-cream;
+}
+
+@layer components {
+  .container-x {
+    @apply mx-auto w-full max-w-[1240px] px-5 sm:px-8;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition
+      duration-200 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+  .btn-dark {
+    @apply btn bg-cocoa text-cream hover:bg-[#241b1e] active:scale-[0.98];
+  }
+  .btn-pink {
+    @apply btn bg-strawberry text-cocoa hover:bg-[#e2889a] active:scale-[0.98];
+  }
+  .btn-rose {
+    @apply btn bg-rose text-white hover:bg-[#b64f62] active:scale-[0.98];
+  }
+  .btn-ghost {
+    @apply btn border border-cocoa/15 bg-white/70 text-cocoa hover:bg-white active:scale-[0.98];
+  }
+  .card {
+    @apply rounded-4xl bg-white shadow-card;
+  }
+  .field {
+    @apply w-full rounded-2xl border border-cocoa/15 bg-white px-4 py-3 text-sm text-cocoa
+      placeholder:text-muted/70 focus:border-rose focus:outline-none;
+  }
+  .label {
+    @apply mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted;
+  }
+  .chip {
+    @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold;
+  }
+  .eyebrow {
+    @apply text-xs font-bold uppercase tracking-[0.28em] text-rose;
+  }
+  .h-display {
+    @apply font-display font-semibold leading-[1.02] tracking-tight;
+  }
+}
+
+@layer utilities {
+  .reveal {
+    opacity: 0;
+    transform: translateY(22px);
+    transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+  }
+  .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .animate-floaty,
+  .animate-floatySlow {
+    animation: none !important;
+  }
+}

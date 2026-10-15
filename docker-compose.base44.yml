@@ -1,0 +1,89 @@
+# Base44 sandbox / development compose for Maison Fraise.
+# Runs the app from the cloned source with live reload (no prebuilt app images).
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: maison
+      POSTGRES_PASSWORD: maison_dev_pw
+      POSTGRES_DB: maison
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U maison -d maison"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: on-failure
+
+  migrate:
+    image: node:22
+    working_dir: /app
+    volumes:
+      - ./server:/app
+      - api_node_modules:/app/node_modules
+    environment:
+      - DATABASE_URL=postgres://maison:maison_dev_pw@db:5432/maison
+    command: ["sh", "-ec", "npm install --no-audit --no-fund && node src/migrate.js"]
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+
+  api:
+    image: node:22
+    working_dir: /app
+    volumes:
+      - ./server:/app
+      - api_node_modules:/app/node_modules
+    environment:
+      - PORT=8000
+      - NODE_ENV=development
+      - DATABASE_URL=postgres://maison:maison_dev_pw@db:5432/maison
+      - JWT_SECRET=${JWT_SECRET:-maison_fraise_dev_jwt_secret}
+      - APP_ORIGIN=https://3000-${BASE44_PUBLIC_HOST_SUFFIX}
+      - BASE44_PREVIEW_MODE
+    command: ["sh", "-ec", "npm install --no-audit --no-fund && exec node --watch src/index.js"]
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test:
+        ["CMD-SHELL", "node -e \"fetch('http://localhost:8000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))\""]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 40s
+    restart: on-failure
+
+  web:
+    image: node:22
+    working_dir: /app
+    volumes:
+      - ./web:/app
+      - web_node_modules:/app/node_modules
+    environment:
+      - BASE44_PREVIEW_MODE
+      - BASE44_SANDBOX_HOST_DOMAIN
+      - __VITE_ADDITIONAL_SERVER_ALLOWED_HOSTS
+    command: ["sh", "-ec", "npm install --no-audit --no-fund && exec npm run dev"]
+    ports:
+      - "3000:5173"
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test:
+        ["CMD-SHELL", "node -e \"fetch('http://localhost:5173/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))\""]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 40s
+    restart: on-failure
+
+volumes:
+  db_data:
+  api_node_modules:
+  web_node_modules:
