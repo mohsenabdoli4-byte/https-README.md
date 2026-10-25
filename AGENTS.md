@@ -36,6 +36,28 @@ docker compose -f docker-compose.base44.yml up -d --build
   Seeding is gated by `SEED_VERSION`: bumping it re-syncs the demo categories, products, sample
   testimonials and settings once on the next `migrate` run, then leaves admin edits alone.
 
+## Home hero — scroll-driven video (`web/src/components/ScrollHero.jsx`)
+- The hero is a scroll-scrubbed clip: `scroll progress -> video.currentTime`. It is **never played**
+  (no `play()`, no autoplay, no loop); an `onPlay` guard pauses it if anything ever tries.
+- Layout: `<section class="hero-pin">` is 300vh tall (260vh ≤767px, see `.hero-pin` in
+  `web/src/index.css`) with a `sticky top-0` child at `100vh`, so progress maps 0→first frame and
+  1→last frame exactly.
+- Perf contract: the passive scroll listener only stores a target progress; one `requestAnimationFrame`
+  loop (started/stopped by an IntersectionObserver) eases it and writes `currentTime` only when the
+  value moved by ≥ `SEEK_EPSILON`. Copy fade uses direct style writes — never React state — so
+  scrolling does not re-render.
+- `prefers-reduced-motion: reduce` or a failed load swaps in a static hero (video poster, or the
+  configured hero image on error). Nothing is unmounted from the rest of the page.
+- Media: `web/public/video/hero-desktop.mp4|webm` (864x480) and `hero-mobile.mp4` (640x360), picked in
+  JS by `matchMedia('(max-width: 767px)')`. `hero-poster.jpg` is the first frame (poster + loading
+  backdrop). Assets are git-tracked, ~11 MB total.
+- The source clip had a **single keyframe**, which stutters badly when scrubbing. These encodes use a
+  keyframe every 6 frames (0.25s), CRF 20/23, yuv420p, `+faststart`, no audio. Re-encode the same way
+  if the clip is replaced, e.g.:
+  `ffmpeg -i in.mp4 -an -c:v libx264 -crf 20 -preset slow -g 6 -keyint_min 6 -sc_threshold 0 -movflags +faststart out.mp4`
+- Seeking needs HTTP range requests (`206 Partial Content`). The Vite dev server supports them; a
+  production host/CDN must too, otherwise the whole file is downloaded before the first seek.
+
 ## Quirks
 - Postgres credentials are local dev values generated for the sandbox; they are not secrets.
 - Sandbox-only overrides (Vite `allowedHosts`, HMR client port) are gated on `BASE44_PREVIEW_MODE === '1'`

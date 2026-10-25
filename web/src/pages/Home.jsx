@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Sparkles, Truck, Heart, Leaf, Clock, BadgeCheck } from 'lucide-react';
+import { ArrowRight, Sparkles, Heart, Leaf, Clock } from 'lucide-react';
 import { api, qs } from '../lib/api.js';
 import { money } from '../lib/format.js';
 import { useSite } from '../context/SiteContext.jsx';
 import Reveal from '../components/Reveal.jsx';
+import ScrollHero from '../components/ScrollHero.jsx';
 import ProductCard from '../components/ProductCard.jsx';
 import StarRating from '../components/StarRating.jsx';
 import { PHOTOS } from '../lib/images.js';
@@ -91,69 +92,8 @@ export default function Home() {
 
   return (
     <div className="pb-4">
-      {/* A — HERO */}
-      <section className="container-x pt-6">
-        <div className="relative overflow-hidden rounded-5xl bg-gradient-to-br from-butter via-blush to-strawberry/60 px-6 py-12 shadow-soft sm:px-10 sm:py-16 lg:px-14">
-          <div
-            className="pointer-events-none absolute -end-24 -top-24 h-72 w-72 rounded-full bg-white/40 blur-2xl"
-            aria-hidden
-          />
-          <div className="relative grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr]">
-            <div className="max-w-xl">
-              <p className="eyebrow">{hero?.eyebrow}</p>
-              <h1 className="h-display mt-4 text-4xl sm:text-5xl lg:text-[3.5rem]">
-                {hero?.headline}
-              </h1>
-              <p className="mt-5 max-w-md text-base leading-relaxed text-cocoa/75 sm:text-lg">
-                {hero?.subtext}
-              </p>
-              <div className="mt-8 flex flex-wrap gap-3">
-                <Link to={hero?.primaryCta?.href || '/shop'} className="btn-dark">
-                  {hero?.primaryCta?.label || 'مشاهده محصولات'}
-                  <ArrowRight className="h-4 w-4 rtl:-scale-x-100" />
-                </Link>
-                <Link to={hero?.secondaryCta?.href || '/custom-cake'} className="btn-ghost">
-                  {hero?.secondaryCta?.label || 'سفارش کیک سفارشی'}
-                </Link>
-              </div>
-              <dl className="mt-10 grid max-w-md grid-cols-3 gap-4">
-                {[
-                  { icon: Truck, label: 'ارسال محلی' },
-                  { icon: Clock, label: 'پخت به سفارش' },
-                  { icon: BadgeCheck, label: 'پرداخت دستی' },
-                ].map((f) => (
-                  <div key={f.label} className="flex items-center gap-2 text-xs font-semibold text-cocoa/80">
-                    <f.icon className="h-4 w-4 text-rose" />
-                    {f.label}
-                  </div>
-                ))}
-              </dl>
-            </div>
-
-            <div className="relative mx-auto w-full max-w-md">
-              <div className="overflow-hidden rounded-[2.5rem] bg-white/40 p-3 shadow-soft">
-                <img
-                  src={hero?.image || PHOTOS.cakes[0]}
-                  alt="کیک جشن با تزئین توت‌فرنگی تازه"
-                  className="h-[320px] w-full rounded-[2rem] object-cover sm:h-[420px]"
-                />
-              </div>
-              <img
-                src={PHOTOS.macarons[0]}
-                alt=""
-                aria-hidden
-                className="absolute -start-4 bottom-8 h-20 w-20 rounded-3xl object-cover shadow-soft animate-floaty sm:h-24 sm:w-24"
-              />
-              <img
-                src={PHOTOS.macarons[3]}
-                alt=""
-                aria-hidden
-                className="absolute -end-3 top-6 h-16 w-16 rounded-2xl object-cover shadow-soft animate-floatySlow sm:h-20 sm:w-20"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* A — HERO (scroll-driven cinematic video) */}
+      <ScrollHero hero={hero} />
 
       {/* B — EDITORIAL MACARON SHOWCASE */}
       <section className="container-x mt-20">

@@ -57,6 +57,19 @@ body {
   .h-display {
     @apply font-display font-semibold leading-[1.3] tracking-normal;
   }
+  /* Scroll-driven hero: a tall scroll runway whose child viewport is pinned,
+     so scroll progress can be mapped onto the video timeline. */
+  .hero-pin {
+    height: 300vh;
+  }
+  .hero-viewport {
+    height: 100vh;
+  }
+  @media (max-width: 767px) {
+    .hero-pin {
+      height: 260vh;
+    }
+  }
 }
 
 @layer utilities {
