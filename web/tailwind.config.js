@@ -15,9 +15,11 @@ export default {
         muted: '#82777A',
       },
       fontFamily: {
-        display: ['Fraunces', 'Georgia', 'serif'],
-        sans: ['Manrope', 'system-ui', 'sans-serif'],
-        hand: ['Caveat', 'cursive'],
+        // Vazirmatn leads every stack so Persian renders correctly; Latin text
+        // still falls back to the original premium typefaces.
+        display: ['Vazirmatn', 'Fraunces', 'Georgia', 'serif'],
+        sans: ['Vazirmatn', 'Manrope', 'system-ui', 'sans-serif'],
+        hand: ['Vazirmatn', 'Caveat', 'cursive'],
       },
       borderRadius: {
         '4xl': '2rem',
@@ -48,5 +50,10 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    // `rtl:` variant so directional icons can be mirrored in the RTL layout.
+    function ({ addVariant }) {
+      addVariant('rtl', '[dir="rtl"] &');
+    },
+  ],
 };

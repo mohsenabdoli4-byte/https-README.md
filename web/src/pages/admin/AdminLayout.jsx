@@ -15,13 +15,13 @@ import {
 import { useAuth } from '../../context/AuthContext.jsx';
 
 const LINKS = [
-  { to: '/admin', label: 'Dashboard', icon: LayoutDashboard, end: true },
-  { to: '/admin/products', label: 'Products', icon: CakeSlice },
-  { to: '/admin/orders', label: 'Orders', icon: ShoppingBag },
-  { to: '/admin/content', label: 'Content', icon: FileText },
-  { to: '/admin/promotions', label: 'Promotions', icon: Tag },
-  { to: '/admin/testimonials', label: 'Testimonials', icon: Star },
-  { to: '/admin/settings', label: 'Business settings', icon: Settings },
+  { to: '/admin', label: 'داشبورد', icon: LayoutDashboard, end: true },
+  { to: '/admin/products', label: 'محصولات', icon: CakeSlice },
+  { to: '/admin/orders', label: 'سفارش‌ها', icon: ShoppingBag },
+  { to: '/admin/content', label: 'محتوای صفحه اصلی', icon: FileText },
+  { to: '/admin/promotions', label: 'تخفیف‌ها', icon: Tag },
+  { to: '/admin/testimonials', label: 'نظرات مشتریان', icon: Star },
+  { to: '/admin/settings', label: 'تنظیمات فروشگاه', icon: Settings },
 ];
 
 export default function AdminLayout() {
@@ -33,7 +33,7 @@ export default function AdminLayout() {
   }, [loading, user, navigate]);
 
   if (loading) {
-    return <div className="container-x py-24 text-center text-sm text-muted">Checking access…</div>;
+    return <div className="container-x py-24 text-center text-sm text-muted">در حال بررسی دسترسی…</div>;
   }
 
   if (!user) return null;
@@ -41,11 +41,11 @@ export default function AdminLayout() {
   if (user.role !== 'admin') {
     return (
       <div className="container-x py-24 text-center">
-        <h1 className="h-display text-3xl">Administrator access required</h1>
+        <h1 className="h-display text-3xl">دسترسی مدیر لازم است</h1>
         <p className="mt-3 text-sm text-muted">
-          This area is restricted. Your account does not have admin permissions.
+          این بخش محدود است. حساب کاربری شما دسترسی مدیریت ندارد.
         </p>
-        <Link to="/" className="btn-dark mt-6">Back to the store</Link>
+        <Link to="/" className="btn-dark mt-6">بازگشت به فروشگاه</Link>
       </div>
     );
   }
@@ -60,7 +60,7 @@ export default function AdminLayout() {
                 <BarChart3 className="h-4 w-4" />
               </span>
               <div>
-                <p className="text-sm font-semibold text-cocoa">Admin</p>
+                <p className="text-sm font-semibold text-cocoa">مدیر</p>
                 <p className="text-xs text-muted">Maison Fraise</p>
               </div>
             </div>
@@ -83,7 +83,7 @@ export default function AdminLayout() {
             </nav>
             <div className="mt-3 border-t border-cocoa/10 pt-3">
               <Link to="/" className="flex items-center gap-3 rounded-2xl px-3 py-2.5 text-sm text-cocoa/70 hover:bg-blush/50">
-                <ArrowLeft className="h-4 w-4" /> Back to store
+                <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" /> بازگشت به فروشگاه
               </Link>
               <button
                 onClick={async () => {
@@ -92,7 +92,7 @@ export default function AdminLayout() {
                 }}
                 className="flex w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-sm text-cocoa/70 hover:bg-blush/50"
               >
-                <LogOut className="h-4 w-4" /> Sign out
+                <LogOut className="h-4 w-4" /> خروج
               </button>
             </div>
           </div>

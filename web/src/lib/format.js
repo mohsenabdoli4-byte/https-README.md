@@ -1,14 +1,24 @@
-export function money(cents, symbol = '$') {
+// Formats a number with Persian (Farsi) digits and grouping.
+export function faNum(value, options) {
+  const n = Number(value || 0);
+  if (!Number.isFinite(n)) return '۰';
+  return n.toLocaleString('fa-IR', options);
+}
+
+// Prices are stored as minor units; the storefront displays them in Toman with
+// Persian digits. Calculation logic is untouched — only the display format.
+export function money(cents, symbol = 'تومان') {
   const n = Number(cents || 0) / 100;
-  return `${symbol}${n.toFixed(2)}`;
+  return `${faNum(n, { maximumFractionDigits: 2 })} ${symbol}`;
 }
 
 export function formatDate(value) {
   if (!value) return '';
   try {
-    return new Date(value).toLocaleDateString('en-US', {
+    // fa-IR uses the Persian (Jalali) calendar in modern browsers.
+    return new Date(value).toLocaleDateString('fa-IR', {
       year: 'numeric',
-      month: 'short',
+      month: 'long',
       day: 'numeric',
     });
   } catch {
@@ -27,13 +37,19 @@ export const ORDER_STATUSES = [
 ];
 
 export const STATUS_LABELS = {
-  pending: 'Pending',
-  confirmed: 'Confirmed',
-  preparing: 'Preparing',
-  ready_for_pickup: 'Ready for pickup',
-  out_for_delivery: 'Out for delivery',
-  completed: 'Completed',
-  cancelled: 'Cancelled',
+  pending: 'در انتظار تأیید',
+  confirmed: 'تأییدشده',
+  preparing: 'در حال آماده‌سازی',
+  ready_for_pickup: 'آماده تحویل حضوری',
+  out_for_delivery: 'در حال ارسال',
+  completed: 'تکمیل‌شده',
+  cancelled: 'لغوشده',
+};
+
+export const PAYMENT_LABELS = {
+  unpaid: 'پرداخت‌نشده',
+  paid: 'پرداخت‌شده',
+  refunded: 'بازپرداخت‌شده',
 };
 
 export const STATUS_STYLES = {

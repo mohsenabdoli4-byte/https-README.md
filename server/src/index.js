@@ -41,12 +41,12 @@ app.use('/api', orderRoutes);
 app.use('/api', miscRoutes);
 app.use('/api/admin', adminRoutes);
 
-app.use('/api', (_req, res) => res.status(404).json({ error: 'Not found' }));
+app.use('/api', (_req, res) => res.status(404).json({ error: 'یافت نشد' }));
 
 // eslint-disable-next-line no-unused-vars
 app.use((err, _req, res, _next) => {
   console.error(err);
-  res.status(500).json({ error: 'Something went wrong.' });
+  res.status(500).json({ error: 'خطایی رخ داد.' });
 });
 
 const port = Number(process.env.PORT || 8000);

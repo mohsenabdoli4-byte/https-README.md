@@ -25,8 +25,8 @@ export default function Wishlist() {
 
   return (
     <div className="container-x py-10">
-      <p className="eyebrow">Saved for later</p>
-      <h1 className="h-display mt-2 text-4xl sm:text-5xl">Your wishlist</h1>
+      <p className="eyebrow">ذخیره‌شده برای بعد</p>
+      <h1 className="h-display mt-2 text-4xl sm:text-5xl">لیست علاقه‌مندی‌های شما</h1>
 
       <div className="mt-8">
         {loading ? (
@@ -40,11 +40,11 @@ export default function Wishlist() {
             <span className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-blush">
               <Heart className="h-6 w-6 text-cocoa" />
             </span>
-            <h2 className="font-display mt-5 text-2xl font-semibold">Nothing saved yet</h2>
+            <h2 className="font-display mt-5 text-2xl font-semibold">هنوز چیزی ذخیره نشده است</h2>
             <p className="mt-2 text-sm text-muted">
-              Tap the heart on any dessert to keep it here.
+              روی قلب هر دسر بزنید تا اینجا بماند.
             </p>
-            <Link to="/shop" className="btn-dark mt-6">Browse the menu</Link>
+            <Link to="/shop" className="btn-dark mt-6">مشاهده منو</Link>
           </div>
         ) : (
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">

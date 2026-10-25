@@ -51,13 +51,13 @@ export async function attachUser(req, _res, next) {
 }
 
 export function requireAuth(req, res, next) {
-  if (!req.user) return res.status(401).json({ error: 'Sign in required.' });
+  if (!req.user) return res.status(401).json({ error: 'برای ادامه باید وارد شوید.' });
   next();
 }
 
 export function requireAdmin(req, res, next) {
-  if (!req.user) return res.status(401).json({ error: 'Sign in required.' });
+  if (!req.user) return res.status(401).json({ error: 'برای ادامه باید وارد شوید.' });
   if (req.user.role !== 'admin')
-    return res.status(403).json({ error: 'Administrator access required.' });
+    return res.status(403).json({ error: 'دسترسی مدیر لازم است.' });
   next();
 }

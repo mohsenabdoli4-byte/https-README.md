@@ -4,16 +4,17 @@ import { Menu, Search, ShoppingBag, User, X, Heart } from 'lucide-react';
 import { useSite } from '../context/SiteContext.jsx';
 import { useCart } from '../context/CartContext.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
+import { faNum } from '../lib/format.js';
 
 const NAV = [
-  { label: 'Shop', to: '/shop' },
-  { label: 'Cakes', to: '/category/cakes' },
-  { label: 'Macarons', to: '/category/macarons' },
-  { label: 'Pastries', to: '/category/pastries' },
-  { label: 'Cupcakes', to: '/category/cupcakes' },
-  { label: 'Gift Boxes', to: '/category/gift-boxes' },
-  { label: 'Our Story', to: '/our-story' },
-  { label: 'Contact', to: '/contact' },
+  { label: 'فروشگاه', to: '/shop' },
+  { label: 'کیک‌ها', to: '/category/cakes' },
+  { label: 'ماکارون‌ها', to: '/category/macarons' },
+  { label: 'شیرینی‌ها', to: '/category/pastries' },
+  { label: 'کاپ‌کیک‌ها', to: '/category/cupcakes' },
+  { label: 'جعبه‌های هدیه', to: '/category/gift-boxes' },
+  { label: 'داستان ما', to: '/our-story' },
+  { label: 'تماس با ما', to: '/contact' },
 ];
 
 export default function Header() {
@@ -52,7 +53,7 @@ export default function Header() {
     <>
       {announcement?.enabled && announcement?.text && (
         <div className="bg-cocoa text-cream">
-          <div className="container-x flex items-center justify-center py-2 text-center text-xs font-medium tracking-wide sm:text-sm">
+          <div className="container-x flex items-center justify-center py-2 text-center text-xs font-medium sm:text-sm">
             <Link to={announcement.href || '/shop'} className="hover:underline">
               {announcement.text}
             </Link>
@@ -72,12 +73,12 @@ export default function Header() {
                 <span className="grid h-9 w-9 place-items-center rounded-full bg-strawberry font-display text-lg font-bold text-cocoa">
                   {brandName.charAt(0)}
                 </span>
-                <span className="hidden font-display text-lg font-semibold tracking-tight text-cocoa min-[400px]:inline">
+                <span className="hidden font-display text-lg font-semibold tracking-normal text-cocoa min-[400px]:inline">
                   {brandName}
                 </span>
               </Link>
 
-              <nav aria-label="Main" className="hidden items-center gap-1 xl:flex">
+              <nav aria-label="منوی اصلی" className="hidden items-center gap-1 xl:flex">
                 {NAV.map((item) => (
                   <NavLink
                     key={item.to}
@@ -96,43 +97,43 @@ export default function Header() {
               <div className="flex items-center gap-1">
                 <button
                   onClick={() => setSearchOpen((s) => !s)}
-                  aria-label="Search products"
+                  aria-label="جستجوی محصولات"
                   className="grid h-10 w-10 place-items-center rounded-full text-cocoa/80 hover:bg-blush/60"
                 >
                   {searchOpen ? <X className="h-5 w-5" /> : <Search className="h-5 w-5" />}
                 </button>
                 <Link
                   to={user ? '/wishlist' : '/signin'}
-                  aria-label="Wishlist"
+                  aria-label="لیست علاقه‌مندی‌ها"
                   className="hidden h-10 w-10 place-items-center rounded-full text-cocoa/80 hover:bg-blush/60 sm:grid"
                 >
                   <Heart className="h-5 w-5" />
                 </Link>
                 <Link
                   to={user ? '/account' : '/signin'}
-                  aria-label={user ? 'Your account' : 'Sign in'}
+                  aria-label={user ? 'حساب کاربری' : 'ورود'}
                   className="grid h-10 w-10 place-items-center rounded-full text-cocoa/80 hover:bg-blush/60"
                 >
                   <User className="h-5 w-5" />
                 </Link>
                 <Link
                   to="/cart"
-                  aria-label={`Shopping bag, ${count} items`}
+                  aria-label={`سبد خرید، ${faNum(count)} کالا`}
                   className="relative grid h-10 w-10 place-items-center rounded-full text-cocoa/80 hover:bg-blush/60"
                 >
                   <ShoppingBag className="h-5 w-5" />
                   {count > 0 && (
-                    <span className="absolute -right-0.5 -top-0.5 grid h-5 min-w-5 place-items-center rounded-full bg-rose px-1 text-[11px] font-bold text-white">
-                      {count}
+                    <span className="absolute -end-0.5 -top-0.5 grid h-5 min-w-5 place-items-center rounded-full bg-rose px-1 text-[11px] font-bold text-white">
+                      {faNum(count)}
                     </span>
                   )}
                 </Link>
-                <Link to="/shop" className="btn-dark ml-1 hidden !px-5 !py-2.5 lg:inline-flex">
-                  Order Now
+                <Link to="/shop" className="btn-dark ms-1 hidden !px-5 !py-2.5 lg:inline-flex">
+                  ثبت سفارش
                 </Link>
                 <button
                   onClick={() => setOpen((o) => !o)}
-                  aria-label="Open menu"
+                  aria-label="باز کردن منو"
                   aria-expanded={open}
                   className="grid h-10 w-10 place-items-center rounded-full text-cocoa/80 hover:bg-blush/60 xl:hidden"
                 >
@@ -144,18 +145,18 @@ export default function Header() {
             {searchOpen && (
               <form onSubmit={submitSearch} className="mb-3 flex gap-2" role="search">
                 <label htmlFor="site-search" className="sr-only">
-                  Search products
+                  جستجوی محصولات
                 </label>
                 <input
                   id="site-search"
                   autoFocus
                   value={term}
                   onChange={(e) => setTerm(e.target.value)}
-                  placeholder="Search macarons, cakes, gift boxes…"
+                  placeholder="جستجوی ماکارون، کیک، جعبه هدیه…"
                   className="field"
                 />
                 <button type="submit" className="btn-dark">
-                  Search
+                  جستجو
                 </button>
               </form>
             )}
@@ -165,7 +166,7 @@ export default function Header() {
         {open && (
           <div className="container-x xl:hidden">
             <nav
-              aria-label="Mobile"
+              aria-label="منوی موبایل"
               className="mb-3 grid gap-1 rounded-4xl border border-cocoa/10 bg-white p-3 shadow-soft"
             >
               {NAV.map((item) => (
@@ -182,7 +183,7 @@ export default function Header() {
                 </NavLink>
               ))}
               <Link to="/shop" className="btn-dark mt-1 w-full">
-                Order Now
+                ثبت سفارش
               </Link>
             </nav>
           </div>

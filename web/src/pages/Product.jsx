@@ -12,7 +12,7 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import { api } from '../lib/api.js';
-import { money, formatDate } from '../lib/format.js';
+import { money, faNum, formatDate } from '../lib/format.js';
 import { useCart } from '../context/CartContext.jsx';
 import { useSite } from '../context/SiteContext.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
@@ -105,10 +105,10 @@ export default function Product() {
   if (!product) {
     return (
       <div className="container-x py-24 text-center">
-        <h1 className="h-display text-3xl">We could not find that dessert</h1>
-        <p className="mt-3 text-sm text-muted">It may have been removed from the menu.</p>
+        <h1 className="h-display text-3xl">این دسر پیدا نشد</h1>
+        <p className="mt-3 text-sm text-muted">ممکن است از منو حذف شده باشد.</p>
         <Link to="/shop" className="btn-dark mt-6">
-          Back to the shop
+          بازگشت به فروشگاه
         </Link>
       </div>
     );
@@ -123,14 +123,14 @@ export default function Product() {
       quantity,
       customization: product.is_customizable && message ? { message } : null,
     });
-    success(`${quantity} × ${product.name} added to your bag.`);
+    success(`${faNum(quantity)} × ${product.name} به سبد خرید اضافه شد.`);
   };
 
   const wishlist = async () => {
     if (!user) return navigate('/signin');
     try {
       await api.post('/wishlist', { productId: product.id });
-      success('Saved to your wishlist.');
+      success('به لیست علاقه‌مندی‌ها اضافه شد.');
     } catch (err) {
       error(err.message);
     }
@@ -142,7 +142,7 @@ export default function Product() {
     setSubmittingReview(true);
     try {
       const res = await api.post(`/products/${product.id}/reviews`, review);
-      success(res.message || 'Thanks for your review.');
+      success(res.message || 'از ثبت نظر شما سپاسگزاریم.');
       setReview({ rating: 5, body: '' });
     } catch (err) {
       error(err.message);
@@ -153,9 +153,9 @@ export default function Product() {
 
   return (
     <div className="container-x py-10">
-      <nav aria-label="Breadcrumb" className="text-xs text-muted">
-        <Link to="/" className="hover:text-rose">Home</Link> /{' '}
-        <Link to="/shop" className="hover:text-rose">Shop</Link> /{' '}
+      <nav aria-label="مسیر صفحه" className="text-xs text-muted">
+        <Link to="/" className="hover:text-rose">خانه</Link> /{' '}
+        <Link to="/shop" className="hover:text-rose">فروشگاه</Link> /{' '}
         {product.category_slug && (
           <>
             <Link to={`/category/${product.category_slug}`} className="hover:text-rose">
@@ -182,7 +182,7 @@ export default function Product() {
                 <button
                   key={g}
                   onClick={() => setActiveImage(i)}
-                  aria-label={`View image ${i + 1}`}
+                  aria-label={`نمایش تصویر ${faNum(i + 1)}`}
                   className={`overflow-hidden rounded-2xl border-2 p-1 ${
                     activeImage === i ? 'border-rose' : 'border-transparent'
                   }`}
@@ -196,21 +196,21 @@ export default function Product() {
 
         <div>
           <div className="flex flex-wrap items-center gap-2">
-            {product.is_bestseller && <span className="chip bg-cocoa text-cream">Bestseller</span>}
-            {product.is_new && <span className="chip bg-mint text-cocoa">New</span>}
-            {product.is_seasonal && <span className="chip bg-strawberry text-cocoa">Seasonal</span>}
+            {product.is_bestseller && <span className="chip bg-cocoa text-cream">پرفروش</span>}
+            {product.is_new && <span className="chip bg-mint text-cocoa">جدید</span>}
+            {product.is_seasonal && <span className="chip bg-strawberry text-cocoa">فصلی</span>}
             {product.in_stock ? (
-              <span className="chip bg-mint text-cocoa">Available</span>
+              <span className="chip bg-mint text-cocoa">موجود</span>
             ) : (
-              <span className="chip bg-muted/20 text-muted">Sold out</span>
+              <span className="chip bg-muted/20 text-muted">ناموجود</span>
             )}
           </div>
 
-          <h1 className="h-display mt-4 text-4xl sm:text-[2.75rem]">{product.name}</h1>
+          <h1 className="h-display mt-4 text-4xl sm:text-[2.5rem]">{product.name}</h1>
           <div className="mt-3 flex items-center gap-4">
             <StarRating value={product.rating} count={product.review_count} />
             {product.category_name && (
-              <span className="text-xs text-muted">in {product.category_name}</span>
+              <span className="text-xs text-muted">در {product.category_name}</span>
             )}
           </div>
           <p className="mt-5 text-base leading-relaxed text-muted">{product.description}</p>
@@ -218,15 +218,15 @@ export default function Product() {
           <p className="mt-6 font-display text-3xl font-semibold text-cocoa">
             {money(unitPrice * quantity + cakeSurcharge, symbol)}
             {quantity > 1 && (
-              <span className="ml-2 text-sm font-normal text-muted">
-                ({money(unitPrice, symbol)} each)
+              <span className="ms-2 text-sm font-normal text-muted">
+                ({money(unitPrice, symbol)} هر واحد)
               </span>
             )}
           </p>
 
           {product.variants?.length > 0 && (
             <div className="mt-6">
-              <p className="label">Choose an option</p>
+              <p className="label">یک گزینه انتخاب کنید</p>
               <div className="flex flex-wrap gap-2">
                 {product.variants.map((v) => (
                   <button
@@ -239,7 +239,7 @@ export default function Product() {
                     }`}
                   >
                     {v.label}
-                    <span className="ml-2 text-xs text-muted">
+                    <span className="ms-2 text-xs text-muted">
                       {money(v.priceCents, symbol)}
                     </span>
                   </button>
@@ -250,7 +250,7 @@ export default function Product() {
 
           {product.flavors?.length > 0 && (
             <div className="mt-5">
-              <p className="label">Flavour</p>
+              <p className="label">طعم</p>
               <div className="flex flex-wrap gap-2">
                 {product.flavors.map((f) => (
                   <button
@@ -260,7 +260,7 @@ export default function Product() {
                       flavor === f ? 'bg-cocoa text-cream' : 'bg-cream ring-1 ring-cocoa/10'
                     }`}
                   >
-                    {flavor === f && <Check className="mr-1 h-3 w-3" />}
+                    {flavor === f && <Check className="me-1 h-3 w-3" />}
                     {f}
                   </button>
                 ))}
@@ -271,16 +271,16 @@ export default function Product() {
           {product.is_customizable && (
             <div className="mt-5">
               <label htmlFor="cake-message" className="label">
-                Personalised message (optional)
+                پیام شخصی‌سازی‌شده (اختیاری)
               </label>
               <input
                 id="cake-message"
                 value={message}
                 onChange={(e) => setMessage(e.target.value.slice(0, 60))}
-                placeholder="Happy birthday, Elodie!"
+                placeholder="تولدت مبارک!"
                 className="field"
               />
-              <p className="mt-1 text-xs text-muted">{message.length}/60 characters</p>
+              <p className="mt-1 text-xs text-muted">{faNum(message.length)}/۶۰ کاراکتر</p>
             </div>
           )}
 
@@ -288,15 +288,15 @@ export default function Product() {
             <div className="flex items-center rounded-full border border-cocoa/15 bg-white">
               <button
                 onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                aria-label="Decrease quantity"
+                aria-label="کاهش تعداد"
                 className="grid h-11 w-11 place-items-center rounded-full hover:bg-blush/60"
               >
                 <Minus className="h-4 w-4" />
               </button>
-              <span className="w-10 text-center font-semibold">{quantity}</span>
+              <span className="w-10 text-center font-semibold">{faNum(quantity)}</span>
               <button
                 onClick={() => setQuantity((q) => Math.min(99, q + 1))}
-                aria-label="Increase quantity"
+                aria-label="افزایش تعداد"
                 className="grid h-11 w-11 place-items-center rounded-full hover:bg-blush/60"
               >
                 <Plus className="h-4 w-4" />
@@ -304,11 +304,11 @@ export default function Product() {
             </div>
             <button onClick={addToCart} disabled={!product.in_stock} className="btn-dark flex-1 sm:flex-none">
               <ShoppingBag className="h-4 w-4" />
-              Add to bag
+              افزودن به سبد خرید
             </button>
-            <button onClick={wishlist} className="btn-ghost" aria-label="Save to wishlist">
+            <button onClick={wishlist} className="btn-ghost" aria-label="افزودن به علاقه‌مندی‌ها">
               <Heart className="h-4 w-4" />
-              Save
+              ذخیره
             </button>
           </div>
 
@@ -316,16 +316,16 @@ export default function Product() {
             <div className="flex items-start gap-3 rounded-2xl bg-white/70 p-4 ring-1 ring-cocoa/10">
               <Clock className="mt-0.5 h-4 w-4 shrink-0 text-rose" />
               <div>
-                <p className="text-sm font-semibold text-cocoa">Preparation</p>
+                <p className="text-sm font-semibold text-cocoa">آماده‌سازی</p>
                 <p className="text-xs text-muted">{product.prep_time}</p>
               </div>
             </div>
             <div className="flex items-start gap-3 rounded-2xl bg-white/70 p-4 ring-1 ring-cocoa/10">
               <Truck className="mt-0.5 h-4 w-4 shrink-0 text-rose" />
               <div>
-                <p className="text-sm font-semibold text-cocoa">Delivery</p>
+                <p className="text-sm font-semibold text-cocoa">ارسال</p>
                 <p className="text-xs text-muted">
-                  {commerce?.pickupEnabled ? 'Local delivery or pickup' : 'Local delivery'}
+                  {commerce?.pickupEnabled ? 'ارسال محلی یا تحویل حضوری' : 'ارسال محلی'}
                 </p>
               </div>
             </div>
@@ -334,8 +334,8 @@ export default function Product() {
           <div className="mt-8 space-y-4 border-t border-cocoa/10 pt-6 text-sm">
             <details className="group" open>
               <summary className="flex cursor-pointer items-center justify-between font-semibold text-cocoa">
-                Ingredients & allergens
-                <ChevronRight className="h-4 w-4 transition group-open:rotate-90" />
+                مواد اولیه و آلرژن‌ها
+                <ChevronRight className="h-4 w-4 rtl:-scale-x-100 transition group-open:rotate-90" />
               </summary>
               <p className="mt-2 text-muted">{product.ingredients}</p>
               <p className="mt-2 flex items-start gap-2 text-muted">
@@ -345,8 +345,8 @@ export default function Product() {
             </details>
             <details className="group">
               <summary className="flex cursor-pointer items-center justify-between font-semibold text-cocoa">
-                Storage
-                <ChevronRight className="h-4 w-4 transition group-open:rotate-90" />
+                نگهداری
+                <ChevronRight className="h-4 w-4 rtl:-scale-x-100 transition group-open:rotate-90" />
               </summary>
               <p className="mt-2 text-muted">{product.storage}</p>
             </details>
@@ -356,12 +356,12 @@ export default function Product() {
 
       {/* Reviews */}
       <section className="mt-16">
-        <h2 className="h-display text-2xl sm:text-3xl">Reviews</h2>
+        <h2 className="h-display text-2xl sm:text-3xl">نظرات</h2>
         <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_360px]">
           <div className="space-y-4">
             {data.reviews.length === 0 ? (
               <div className="card p-6 text-sm text-muted">
-                No approved reviews yet. Be the first to share your thoughts.
+                هنوز نظر تأییدشده‌ای ثبت نشده است. اولین نفر باشید.
               </div>
             ) : (
               data.reviews.map((r) => (
@@ -380,13 +380,13 @@ export default function Product() {
           </div>
 
           <form onSubmit={submitReview} className="card h-fit p-6">
-            <h3 className="font-display text-lg font-semibold">Write a review</h3>
+            <h3 className="font-display text-lg font-semibold">ثبت نظر</h3>
             <p className="mt-1 text-xs text-muted">
-              Reviews are moderated before appearing on the store.
+              نظرات پیش از نمایش در فروشگاه بررسی می‌شوند.
             </p>
             <div className="mt-4">
               <label htmlFor="review-rating" className="label">
-                Rating
+                امتیاز
               </label>
               <select
                 id="review-rating"
@@ -396,14 +396,14 @@ export default function Product() {
               >
                 {[5, 4, 3, 2, 1].map((n) => (
                   <option key={n} value={n}>
-                    {n} star{n > 1 ? 's' : ''}
+                    {faNum(n)} ستاره
                   </option>
                 ))}
               </select>
             </div>
             <div className="mt-4">
               <label htmlFor="review-body" className="label">
-                Your review
+                نظر شما
               </label>
               <textarea
                 id="review-body"
@@ -411,11 +411,11 @@ export default function Product() {
                 value={review.body}
                 onChange={(e) => setReview((r) => ({ ...r, body: e.target.value }))}
                 className="field"
-                placeholder="What did you think?"
+                placeholder="نظر شما چیست؟"
               />
             </div>
             <button type="submit" disabled={submittingReview} className="btn-dark mt-4 w-full">
-              {submittingReview ? 'Sending…' : user ? 'Submit review' : 'Sign in to review'}
+              {submittingReview ? 'در حال ارسال…' : user ? 'ثبت نظر' : 'برای ثبت نظر وارد شوید'}
             </button>
           </form>
         </div>
@@ -423,7 +423,7 @@ export default function Product() {
 
       {data.related.length > 0 && (
         <section className="mt-16">
-          <h2 className="h-display text-2xl sm:text-3xl">You might also like</h2>
+          <h2 className="h-display text-2xl sm:text-3xl">شاید این‌ها را هم دوست داشته باشید</h2>
           <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {data.related.map((p) => (
               <ProductCard key={p.id} product={p} compact />
@@ -434,7 +434,7 @@ export default function Product() {
 
       {recent.length > 0 && (
         <section className="mt-16">
-          <h2 className="h-display text-2xl sm:text-3xl">Recently viewed</h2>
+          <h2 className="h-display text-2xl sm:text-3xl">بازدیدهای اخیر</h2>
           <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {recent.map((p) => (
               <ProductCard key={p.id} product={p} compact />

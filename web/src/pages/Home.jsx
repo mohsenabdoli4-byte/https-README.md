@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Sparkles, Truck, Heart, Leaf, Clock, BadgeCheck } from 'lucide-react';
 import { api, qs } from '../lib/api.js';
+import { money } from '../lib/format.js';
 import { useSite } from '../context/SiteContext.jsx';
 import Reveal from '../components/Reveal.jsx';
 import ProductCard from '../components/ProductCard.jsx';
@@ -79,7 +80,7 @@ export default function Home() {
     setBusy(true);
     try {
       const res = await api.post('/newsletter', { email });
-      success(res.message || 'You are on the list.');
+      success(res.message || 'ایمیل شما ثبت شد.');
       setEmail('');
     } catch (err) {
       error(err.message);
@@ -94,13 +95,13 @@ export default function Home() {
       <section className="container-x pt-6">
         <div className="relative overflow-hidden rounded-5xl bg-gradient-to-br from-butter via-blush to-strawberry/60 px-6 py-12 shadow-soft sm:px-10 sm:py-16 lg:px-14">
           <div
-            className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-white/40 blur-2xl"
+            className="pointer-events-none absolute -end-24 -top-24 h-72 w-72 rounded-full bg-white/40 blur-2xl"
             aria-hidden
           />
           <div className="relative grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr]">
             <div className="max-w-xl">
               <p className="eyebrow">{hero?.eyebrow}</p>
-              <h1 className="h-display mt-4 text-4xl sm:text-5xl lg:text-[4rem]">
+              <h1 className="h-display mt-4 text-4xl sm:text-5xl lg:text-[3.5rem]">
                 {hero?.headline}
               </h1>
               <p className="mt-5 max-w-md text-base leading-relaxed text-cocoa/75 sm:text-lg">
@@ -108,18 +109,18 @@ export default function Home() {
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link to={hero?.primaryCta?.href || '/shop'} className="btn-dark">
-                  {hero?.primaryCta?.label || 'Explore Our Collection'}
-                  <ArrowRight className="h-4 w-4" />
+                  {hero?.primaryCta?.label || 'مشاهده محصولات'}
+                  <ArrowRight className="h-4 w-4 rtl:-scale-x-100" />
                 </Link>
                 <Link to={hero?.secondaryCta?.href || '/custom-cake'} className="btn-ghost">
-                  {hero?.secondaryCta?.label || 'Order a Custom Cake'}
+                  {hero?.secondaryCta?.label || 'سفارش کیک سفارشی'}
                 </Link>
               </div>
               <dl className="mt-10 grid max-w-md grid-cols-3 gap-4">
                 {[
-                  { icon: Truck, label: 'Local delivery' },
-                  { icon: Clock, label: 'Baked to order' },
-                  { icon: BadgeCheck, label: 'Hand finished' },
+                  { icon: Truck, label: 'ارسال محلی' },
+                  { icon: Clock, label: 'پخت به سفارش' },
+                  { icon: BadgeCheck, label: 'پرداخت دستی' },
                 ].map((f) => (
                   <div key={f.label} className="flex items-center gap-2 text-xs font-semibold text-cocoa/80">
                     <f.icon className="h-4 w-4 text-rose" />
@@ -133,7 +134,7 @@ export default function Home() {
               <div className="overflow-hidden rounded-[2.5rem] bg-white/40 p-3 shadow-soft">
                 <img
                   src={hero?.image || PHOTOS.cakes[0]}
-                  alt="A celebration cake finished with fresh berries"
+                  alt="کیک جشن با تزئین توت‌فرنگی تازه"
                   className="h-[320px] w-full rounded-[2rem] object-cover sm:h-[420px]"
                 />
               </div>
@@ -141,13 +142,13 @@ export default function Home() {
                 src={PHOTOS.macarons[0]}
                 alt=""
                 aria-hidden
-                className="absolute -left-4 bottom-8 h-20 w-20 rounded-3xl object-cover shadow-soft animate-floaty sm:h-24 sm:w-24"
+                className="absolute -start-4 bottom-8 h-20 w-20 rounded-3xl object-cover shadow-soft animate-floaty sm:h-24 sm:w-24"
               />
               <img
                 src={PHOTOS.macarons[3]}
                 alt=""
                 aria-hidden
-                className="absolute -right-3 top-6 h-16 w-16 rounded-2xl object-cover shadow-soft animate-floatySlow sm:h-20 sm:w-20"
+                className="absolute -end-3 top-6 h-16 w-16 rounded-2xl object-cover shadow-soft animate-floatySlow sm:h-20 sm:w-20"
               />
             </div>
           </div>
@@ -159,25 +160,25 @@ export default function Home() {
         <div className="grid gap-4 lg:grid-cols-12">
           <Reveal className="lg:col-span-7">
             <div className="relative h-full overflow-hidden rounded-5xl bg-blush p-8 sm:p-10">
-              <p className="font-hand text-2xl text-rose">made with love</p>
-              <h2 className="h-display mt-1 text-[3.25rem] leading-[0.95] sm:text-[4.5rem]">
-                FRESH
+              <p className="font-hand text-2xl text-rose">با عشق ساخته شده</p>
+              <h2 className="h-display mt-1 text-[2.75rem] leading-[1.15] sm:text-[3.5rem]">
+                طعم‌های
                 <br />
-                FLAVORS
+                تازه
               </h2>
               <p className="mt-4 max-w-sm text-sm leading-relaxed text-cocoa/75">
-                Macarons filled the morning they are sold — strawberry, rose, pistachio and raspberry,
-                rested overnight for a soft centre and a crisp shell.
+                ماکارون‌ها همان روزی که فروخته می‌شوند پر می‌شوند — توت‌فرنگی، گل رز، پسته و تمشک،
+                یک شب استراحت می‌کنند تا مغز نرم و پوسته‌ای ترد داشته باشند.
               </p>
               <Link to="/category/macarons" className="btn-dark mt-7">
-                Shop macarons
-                <ArrowRight className="h-4 w-4" />
+                خرید ماکارون‌ها
+                <ArrowRight className="h-4 w-4 rtl:-scale-x-100" />
               </Link>
               <img
                 src={PHOTOS.macarons[1]}
                 alt=""
                 aria-hidden
-                className="absolute -bottom-6 right-6 h-24 w-24 rounded-3xl object-cover shadow-soft animate-floaty sm:h-32 sm:w-32"
+                className="absolute -bottom-6 end-6 h-24 w-24 rounded-3xl object-cover shadow-soft animate-floaty sm:h-32 sm:w-32"
               />
             </div>
           </Reveal>
@@ -187,7 +188,7 @@ export default function Home() {
               <div className="overflow-hidden rounded-5xl bg-white p-3 shadow-card">
                 <img
                   src={PHOTOS.macarons[2]}
-                  alt="A stack of pastel macarons"
+                  alt="دسته‌ای ماکارون پاستلی"
                   loading="lazy"
                   className="h-56 w-full rounded-[2rem] object-cover"
                 />
@@ -198,7 +199,7 @@ export default function Home() {
                 <div className="overflow-hidden rounded-5xl bg-white p-3 shadow-card">
                   <img
                     src={PHOTOS.fruit[0]}
-                    alt="Fresh strawberries"
+                    alt="توت‌فرنگی تازه"
                     loading="lazy"
                     className="h-40 w-full rounded-[1.75rem] object-cover"
                   />
@@ -206,7 +207,7 @@ export default function Home() {
                 <div className="overflow-hidden rounded-5xl bg-white p-3 shadow-card">
                   <img
                     src={PHOTOS.cupcakes[2]}
-                    alt="Frosted cupcakes"
+                    alt="کاپ‌کیک‌های تزئین‌شده"
                     loading="lazy"
                     className="h-40 w-full rounded-[1.75rem] object-cover"
                   />
@@ -220,8 +221,8 @@ export default function Home() {
       {/* C — SHOP BY CATEGORY */}
       <section className="container-x mt-20">
         <SectionHeading
-          eyebrow="Explore"
-          title={content?.categoriesTitle || 'Shop by Category'}
+          eyebrow="گشت‌وگذار"
+          title={content?.categoriesTitle || 'خرید بر اساس دسته‌بندی'}
           subtitle={content?.categoriesSubtitle}
         />
 
@@ -259,7 +260,7 @@ export default function Home() {
                       <h3 className="font-display text-2xl font-semibold">{cat.name}</h3>
                       <p className="mt-1 max-w-sm text-sm text-cream/85">{cat.description}</p>
                       <span className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-cream">
-                        Explore <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
+                        مشاهده <ArrowRight className="h-4 w-4 rtl:-scale-x-100 transition group-hover:-translate-x-1" />
                       </span>
                     </div>
                   </Link>
@@ -274,13 +275,13 @@ export default function Home() {
       <section className="container-x mt-20">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <SectionHeading
-            eyebrow="Loved by our regulars"
-            title={content?.bestsellersTitle || 'Our Most-Loved Treats'}
+            eyebrow="محبوب مشتریان همیشگی"
+            title={content?.bestsellersTitle || 'محبوب‌ترین دسرهای ما'}
             subtitle={content?.bestsellersSubtitle}
           />
           <Link to="/shop" className="btn-ghost">
-            View all desserts
-            <ArrowRight className="h-4 w-4" />
+            مشاهده همه دسرها
+            <ArrowRight className="h-4 w-4 rtl:-scale-x-100" />
           </Link>
         </div>
 
@@ -296,40 +297,40 @@ export default function Home() {
         <Reveal>
           <div className="grid overflow-hidden rounded-5xl bg-mint lg:grid-cols-2">
             <div className="p-8 sm:p-12">
-              <p className="eyebrow">Custom cakes</p>
+              <p className="eyebrow">کیک سفارشی</p>
               <h2 className="h-display mt-3 text-3xl sm:text-4xl">
-                {content?.cakeBanner?.headline || 'Made for Your Special Moments'}
+                {content?.cakeBanner?.headline || 'برای لحظه‌های خاص شما ساخته شده'}
               </h2>
               <p className="mt-4 max-w-md text-sm leading-relaxed text-cocoa/75">
                 {content?.cakeBanner?.body}
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link to={content?.cakeBanner?.primaryCta?.href || '/custom-cake'} className="btn-dark">
-                  {content?.cakeBanner?.primaryCta?.label || 'Design Your Cake'}
+                  {content?.cakeBanner?.primaryCta?.label || 'طراحی کیک شما'}
                 </Link>
                 <Link to={content?.cakeBanner?.secondaryCta?.href || '/category/cakes'} className="btn-ghost">
-                  {content?.cakeBanner?.secondaryCta?.label || 'Explore Cakes'}
+                  {content?.cakeBanner?.secondaryCta?.label || 'مشاهده کیک‌ها'}
                 </Link>
               </div>
               <ul className="mt-8 grid gap-3 text-sm text-cocoa/80 sm:grid-cols-2">
                 <li className="flex items-center gap-2">
-                  <Heart className="h-4 w-4 text-rose" /> Choose size, flavour and filling
+                  <Heart className="h-4 w-4 text-rose" /> انتخاب اندازه، طعم و مغزی
                 </li>
                 <li className="flex items-center gap-2">
-                  <Sparkles className="h-4 w-4 text-rose" /> Personalised message
+                  <Sparkles className="h-4 w-4 text-rose" /> پیام شخصی‌سازی‌شده
                 </li>
                 <li className="flex items-center gap-2">
-                  <Leaf className="h-4 w-4 text-rose" /> Seasonal fruit finishes
+                  <Leaf className="h-4 w-4 text-rose" /> تزئین با میوه فصل
                 </li>
                 <li className="flex items-center gap-2">
-                  <Clock className="h-4 w-4 text-rose" /> 48 hours' notice
+                  <Clock className="h-4 w-4 text-rose" /> ۴۸ ساعت زمان لازم است
                 </li>
               </ul>
             </div>
             <div className="relative min-h-[280px]">
               <img
                 src={PHOTOS.cakes[2]}
-                alt="A layered celebration cake with delicate frosting"
+                alt="کیک لایه‌ای جشن با تزئین لطیف"
                 loading="lazy"
                 className="h-full w-full object-cover"
               />
@@ -341,8 +342,8 @@ export default function Home() {
       {/* F — SEASONAL COLLECTION */}
       <section className="container-x mt-20">
         <SectionHeading
-          eyebrow="Limited run"
-          title={content?.seasonal?.title || 'Seasonal Collection'}
+          eyebrow="تولید محدود"
+          title={content?.seasonal?.title || 'مجموعه فصلی'}
           subtitle={content?.seasonal?.subtitle}
         />
         <div className="mt-8 grid gap-5 lg:grid-cols-3">
@@ -364,8 +365,7 @@ export default function Home() {
                   </h3>
                   <p className="mt-1 line-clamp-2 text-sm text-muted">{p.short_description}</p>
                   <p className="mt-3 font-display text-lg font-semibold text-cocoa">
-                    {symbol}
-                    {(p.price_cents / 100).toFixed(2)}
+                    {money(p.price_cents, symbol)}
                   </p>
                 </div>
               </Link>
@@ -373,7 +373,7 @@ export default function Home() {
           ))}
           {!loading && seasonal.length === 0 && (
             <div className="card p-8 text-sm text-muted lg:col-span-3">
-              No seasonal desserts are running right now — check back soon.
+              در حال حاضر دسر فصلی فعالی نداریم — به‌زودی دوباره سر بزنید.
             </div>
           )}
         </div>
@@ -386,26 +386,26 @@ export default function Home() {
             <div className="grid grid-cols-2 gap-4">
               <img
                 src={PHOTOS.pastries[0]}
-                alt="Pastries cooling on a rack"
+                alt="شیرینی‌ها روی توری خنک می‌شوند"
                 loading="lazy"
                 className="h-64 w-full rounded-4xl object-cover shadow-card"
               />
               <img
                 src={PHOTOS.desserts[1]}
-                alt="A pastry chef finishing a dessert"
+                alt="قناد در حال تکمیل یک دسر"
                 loading="lazy"
                 className="mt-8 h-64 w-full rounded-4xl object-cover shadow-card"
               />
             </div>
             <div>
-              <p className="eyebrow">Craft</p>
+              <p className="eyebrow">هنر دست</p>
               <h2 className="h-display mt-3 text-3xl sm:text-4xl">
-                {content?.story?.title || 'Our Story'}
+                {content?.story?.title || 'داستان ما'}
               </h2>
               <p className="mt-4 text-base leading-relaxed text-muted">{content?.story?.body}</p>
               <Link to={content?.story?.link?.href || '/our-story'} className="btn-ghost mt-7">
-                {content?.story?.link?.label || 'Read our story'}
-                <ArrowRight className="h-4 w-4" />
+                {content?.story?.link?.label || 'داستان ما را بخوانید'}
+                <ArrowRight className="h-4 w-4 rtl:-scale-x-100" />
               </Link>
             </div>
           </div>
@@ -415,9 +415,9 @@ export default function Home() {
       {/* H — TESTIMONIALS */}
       <section className="container-x mt-20">
         <SectionHeading
-          eyebrow="Kind words"
-          title="What our customers say"
-          subtitle="Sample reviews shown while the store is new — real customer reviews replace them as they arrive."
+          eyebrow="از زبان مشتریان"
+          title="مشتریان چه می‌گویند"
+          subtitle="تا زمانی که فروشگاه تازه است، نظرات نمونه نمایش داده می‌شود — با رسیدن نظرات واقعی جایگزین می‌شوند."
           align="center"
         />
         <div className="mt-8 grid gap-5 lg:grid-cols-3">
@@ -426,13 +426,13 @@ export default function Home() {
               <figure className="card flex h-full flex-col p-7">
                 <StarRating value={t.rating} />
                 <blockquote className="mt-4 flex-1 text-sm leading-relaxed text-cocoa/80">
-                  “{t.body}”
+                  «{t.body}»
                 </blockquote>
                 <figcaption className="mt-5 border-t border-cocoa/10 pt-4">
                   <p className="text-sm font-semibold text-cocoa">{t.name}</p>
                   <p className="text-xs text-muted">{t.location}</p>
                   {t.is_sample && (
-                    <p className="mt-2 chip bg-butter/70 text-cocoa">Sample testimonial</p>
+                    <p className="mt-2 chip bg-butter/70 text-cocoa">نظر نمونه</p>
                   )}
                 </figcaption>
               </figure>
@@ -445,16 +445,16 @@ export default function Home() {
       <section className="container-x mt-20">
         <Reveal>
           <div className="rounded-5xl bg-lavender px-6 py-12 text-center sm:px-12">
-            <p className="font-hand text-2xl text-rose">stay in the loop</p>
+            <p className="font-hand text-2xl text-rose">در جریان باشید</p>
             <h2 className="h-display mt-1 text-3xl sm:text-4xl">
-              {content?.newsletter?.title || 'A Little Sweetness in Your Inbox'}
+              {content?.newsletter?.title || 'کمی شیرینی در صندوق ایمیل شما'}
             </h2>
             <p className="mx-auto mt-3 max-w-lg text-sm leading-relaxed text-cocoa/75">
               {content?.newsletter?.body}
             </p>
             <form onSubmit={subscribe} className="mx-auto mt-7 flex max-w-md flex-col gap-3 sm:flex-row">
               <label htmlFor="home-newsletter" className="sr-only">
-                Email address
+                نشانی ایمیل
               </label>
               <input
                 id="home-newsletter"
@@ -463,14 +463,14 @@ export default function Home() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
-                className="field"
+                className="field ltr"
               />
               <button type="submit" disabled={busy} className="btn-dark shrink-0">
-                {busy ? 'Joining…' : 'Subscribe'}
+                {busy ? 'در حال عضویت…' : 'عضویت'}
               </button>
             </form>
             <p className="mt-3 text-xs text-cocoa/60">
-              By subscribing you agree to receive occasional emails. Unsubscribe any time.
+              با عضویت، موافقت می‌کنید ایمیل‌های گاه‌به‌گاه دریافت کنید. هر زمان می‌توانید لغو کنید.
             </p>
           </div>
         </Reveal>

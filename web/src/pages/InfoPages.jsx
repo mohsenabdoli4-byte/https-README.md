@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, MapPin, Phone, Clock } from 'lucide-react';
 import { api } from '../lib/api.js';
+import { money } from '../lib/format.js';
 import { useSite } from '../context/SiteContext.jsx';
 import { useToast } from '../context/ToastContext.jsx';
 import { PHOTOS } from '../lib/images.js';
@@ -20,25 +21,25 @@ function PageShell({ eyebrow, title, intro, children }) {
 export function OurStory() {
   const { content } = useSite();
   return (
-    <PageShell eyebrow="Craft" title={content?.story?.title || 'Our Story'}>
+    <PageShell eyebrow="هنر دست" title={content?.story?.title || 'داستان ما'}>
       <div className="grid items-center gap-10 lg:grid-cols-2">
         <div className="grid grid-cols-2 gap-4">
-          <img src={PHOTOS.pastries[1]} alt="Pastries being finished by hand" className="h-72 w-full rounded-4xl object-cover shadow-card" />
-          <img src={PHOTOS.desserts[0]} alt="A dessert plated in the kitchen" className="mt-10 h-72 w-full rounded-4xl object-cover shadow-card" />
+          <img src={PHOTOS.pastries[1]} alt="شیرینی‌هایی که با دست تکمیل می‌شوند" className="h-72 w-full rounded-4xl object-cover shadow-card" />
+          <img src={PHOTOS.desserts[0]} alt="دسری که در آشپزخانه تزئین می‌شود" className="mt-10 h-72 w-full rounded-4xl object-cover shadow-card" />
         </div>
         <div className="space-y-5 text-base leading-relaxed text-muted">
           <p>{content?.story?.body}</p>
           <p>
-            We work in small batches so nothing sits. Macarons are filled the morning they are sold, cakes are
-            assembled the day they leave the kitchen, and pastries are laminated over three days for the crumb we
-            want. Fruit comes from the market and changes with the season.
+            ما در دسته‌های کوچک کار می‌کنیم تا هیچ‌چیز بی‌استفاده نماند. ماکارون‌ها همان روزی که فروخته می‌شوند
+            پر می‌شوند، کیک‌ها روزی که از آشپزخانه خارج می‌شوند مونتاژ می‌شوند و شیرینی‌ها در سه روز ورقه‌ای
+            می‌شوند تا بافتی که می‌خواهیم به دست آید. میوه از بازار تهیه می‌شود و با فصل تغییر می‌کند.
           </p>
           <p>
-            If something is not right, tell us — we would rather remake it than have you remember it as average.
+            اگر چیزی درست نبود، به ما بگویید — ترجیح می‌دهیم آن را دوباره بسازیم تا اینکه آن را متوسط به یاد بیاورید.
           </p>
           <div className="flex flex-wrap gap-3 pt-2">
-            <Link to="/shop" className="btn-dark">Shop the menu</Link>
-            <Link to="/contact" className="btn-ghost">Visit the store</Link>
+            <Link to="/shop" className="btn-dark">خرید از منو</Link>
+            <Link to="/contact" className="btn-ghost">بازدید از فروشگاه</Link>
           </div>
         </div>
       </div>
@@ -57,7 +58,7 @@ export function Contact() {
     setBusy(true);
     try {
       const res = await api.post('/contact', form);
-      success(res.message || 'Message sent.');
+      success(res.message || 'پیام ارسال شد.');
       setForm({ name: '', email: '', subject: '', message: '' });
     } catch (err) {
       error(err.message);
@@ -68,37 +69,37 @@ export function Contact() {
 
   return (
     <PageShell
-      eyebrow="Say hello"
-      title="Contact us"
-      intro="Questions about an order, a custom cake or an allergy? Send a note and we will reply within one working day."
+      eyebrow="سلام کنید"
+      title="تماس با ما"
+      intro="درباره سفارش، کیک سفارشی یا حساسیت غذایی سؤالی دارید؟ پیامی بفرستید تا در اولین روز کاری پاسخ دهیم."
     >
       <div className="grid gap-8 lg:grid-cols-[1fr_380px]">
         <form onSubmit={submit} className="card p-6 sm:p-8">
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <label htmlFor="ct-name" className="label">Name</label>
+              <label htmlFor="ct-name" className="label">نام</label>
               <input id="ct-name" required value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} className="field" />
             </div>
             <div>
-              <label htmlFor="ct-email" className="label">Email</label>
-              <input id="ct-email" type="email" required value={form.email} onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))} className="field" />
+              <label htmlFor="ct-email" className="label">ایمیل</label>
+              <input id="ct-email" type="email" required value={form.email} onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))} className="field ltr" />
             </div>
           </div>
           <div className="mt-4">
-            <label htmlFor="ct-subject" className="label">Subject</label>
+            <label htmlFor="ct-subject" className="label">موضوع</label>
             <input id="ct-subject" value={form.subject} onChange={(e) => setForm((f) => ({ ...f, subject: e.target.value }))} className="field" />
           </div>
           <div className="mt-4">
-            <label htmlFor="ct-message" className="label">Message</label>
+            <label htmlFor="ct-message" className="label">پیام</label>
             <textarea id="ct-message" rows={5} required value={form.message} onChange={(e) => setForm((f) => ({ ...f, message: e.target.value }))} className="field" />
           </div>
           <button type="submit" disabled={busy} className="btn-dark mt-6">
-            {busy ? 'Sending…' : 'Send message'}
+            {busy ? 'در حال ارسال…' : 'ارسال پیام'}
           </button>
         </form>
 
         <aside className="card h-fit p-6 sm:p-8">
-          <h2 className="font-display text-xl font-semibold">Visit us</h2>
+          <h2 className="font-display text-xl font-semibold">بازدید حضوری</h2>
           <ul className="mt-5 space-y-4 text-sm">
             <li className="flex items-start gap-3">
               <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-rose" />
@@ -106,17 +107,17 @@ export function Contact() {
             </li>
             <li className="flex items-start gap-3">
               <Phone className="mt-0.5 h-4 w-4 shrink-0 text-rose" />
-              <span className="text-muted">{contact?.phone}</span>
+              <span className="text-muted ltr">{contact?.phone}</span>
             </li>
             <li className="flex items-start gap-3">
               <Mail className="mt-0.5 h-4 w-4 shrink-0 text-rose" />
-              <a href={`mailto:${contact?.email}`} className="text-muted hover:text-rose">{contact?.email}</a>
+              <a href={`mailto:${contact?.email}`} className="text-muted ltr hover:text-rose">{contact?.email}</a>
             </li>
             <li className="flex items-start gap-3">
               <Clock className="mt-0.5 h-4 w-4 shrink-0 text-rose" />
               <span className="text-muted">
                 {(contact?.hours || []).map((h) => (
-                  <span key={h.day} className="block">{h.day}: {h.time}</span>
+                  <span key={h.day} className="block">{h.day}: <span className="ltr inline-block">{h.time}</span></span>
                 ))}
               </span>
             </li>
@@ -128,17 +129,17 @@ export function Contact() {
 }
 
 const FAQS = [
-  { q: 'How far in advance should I order?', a: 'Most desserts are ready the same day or within a few hours. Celebration cakes and large custom orders need 48 hours notice.' },
-  { q: 'Do you deliver?', a: 'Yes — we deliver within our local zones. Delivery is free over the threshold shown in the cart, otherwise a flat fee applies. You can also choose pickup in store.' },
-  { q: 'Can I add a personal message to a cake?', a: 'Yes. Use the cake builder or the message field on any customisable cake product.' },
-  { q: 'How should I store my desserts?', a: 'Keep everything refrigerated and bring to room temperature for 20 minutes before serving. Macarons are best within 48 hours.' },
-  { q: 'Do you cater for allergies?', a: 'Every product page lists allergens. We prepare everything in a kitchen that handles wheat, egg, dairy, nuts and sesame, so we cannot guarantee an allergen-free environment.' },
-  { q: 'Can I change or cancel an order?', a: 'Contact us as soon as possible. Orders already in preparation or dispatched cannot be changed.' },
+  { q: 'چقدر زودتر باید سفارش بدهم؟', a: 'بیشتر دسرها همان روز یا در چند ساعت آماده می‌شوند. کیک‌های جشن و سفارش‌های بزرگ سفارشی به ۴۸ ساعت زمان نیاز دارند.' },
+  { q: 'ارسال دارید؟', a: 'بله — در محدوده مناطق محلی ما ارسال می‌کنیم. برای سفارش‌های بالای مبلغ مشخص‌شده در سبد خرید، ارسال رایگان است؛ در غیر این صورت هزینه ثابتی دریافت می‌شود. می‌توانید تحویل حضوری را هم انتخاب کنید.' },
+  { q: 'می‌توانم پیام شخصی روی کیک اضافه کنم؟', a: 'بله. از کیک‌ساز یا فیلد پیام در هر محصول کیک قابل شخصی‌سازی استفاده کنید.' },
+  { q: 'دسرها را چطور نگهداری کنم؟', a: 'همه را در یخچال نگه دارید و ۲۰ دقیقه پیش از سرو در دمای اتاق قرار دهید. ماکارون‌ها تا ۴۸ ساعت بهترین کیفیت را دارند.' },
+  { q: 'برای آلرژی‌ها گزینه دارید؟', a: 'آلرژن‌ها در صفحه هر محصول فهرست شده‌اند. همه محصولات در آشپزخانه‌ای تهیه می‌شوند که با گندم، تخم‌مرغ، لبنیات، مغزها و کنجد سر و کار دارد، بنابراین محیطی کاملاً بدون آلرژن تضمین نمی‌کنیم.' },
+  { q: 'می‌توانم سفارشم را تغییر دهم یا لغو کنم؟', a: 'هرچه سریع‌تر با ما تماس بگیرید. سفارش‌هایی که در حال آماده‌سازی یا ارسال هستند قابل تغییر نیستند.' },
 ];
 
 export function Faq() {
   return (
-    <PageShell eyebrow="Help" title="Frequently asked questions" intro="The quick answers. If yours is not here, send us a note.">
+    <PageShell eyebrow="راهنما" title="پرسش‌های متداول" intro="پاسخ‌های کوتاه. اگر پرسش شما اینجا نبود، پیامی برای ما بفرستید.">
       <div className="grid gap-4 lg:grid-cols-2">
         {FAQS.map((f) => (
           <details key={f.q} className="card p-6">
@@ -154,32 +155,32 @@ export function Faq() {
 export function Shipping() {
   const { commerce, symbol } = useSite();
   return (
-    <PageShell eyebrow="Policies" title="Shipping & delivery" intro="How your order reaches you, and what happens if plans change.">
+    <PageShell eyebrow="قوانین" title="ارسال و تحویل" intro="سفارش شما چطور به دستتان می‌رسد و اگر برنامه‌ها تغییر کرد چه اتفاقی می‌افتد.">
       <div className="grid gap-6 lg:grid-cols-2">
         <div className="card p-7">
-          <h2 className="font-display text-xl font-semibold">Delivery</h2>
+          <h2 className="font-display text-xl font-semibold">ارسال</h2>
           <ul className="mt-4 space-y-3 text-sm text-muted">
-            <li>Local delivery within {commerce?.deliveryZones?.join(', ') || 'our local zones'}.</li>
-            <li>Flat fee of {symbol}{((commerce?.deliveryFeeCents || 0) / 100).toFixed(2)}, free over {symbol}{((commerce?.freeDeliveryThresholdCents || 0) / 100).toFixed(2)}.</li>
-            <li>Choose a date and a two-hour time slot at checkout.</li>
-            <li>Deliveries are made by our own couriers in temperature-controlled bags.</li>
+            <li>ارسال محلی در {commerce?.deliveryZones?.join('، ') || 'مناطق محلی ما'}.</li>
+            <li>هزینه ثابت {money(commerce?.deliveryFeeCents || 0, symbol)}، رایگان برای سفارش بالای {money(commerce?.freeDeliveryThresholdCents || 0, symbol)}.</li>
+            <li>در تسویه حساب تاریخ و بازه دو ساعته را انتخاب کنید.</li>
+            <li>ارسال‌ها با پیک‌های خودمان و در کیف‌های دمای کنترل‌شده انجام می‌شود.</li>
           </ul>
         </div>
         <div className="card p-7">
-          <h2 className="font-display text-xl font-semibold">Returns & cancellation</h2>
+          <h2 className="font-display text-xl font-semibold">مرجوعی و لغو سفارش</h2>
           <ul className="mt-4 space-y-3 text-sm text-muted">
-            <li>Because our food is made to order, we cannot accept returns once delivered.</li>
-            <li>If something is wrong with your order, contact us the same day and we will make it right.</li>
-            <li>Orders can be cancelled free of charge before preparation begins.</li>
-            <li>Cancellations after preparation starts may not be refundable.</li>
+            <li>چون خوراکی‌ها به سفارش شما ساخته می‌شوند، پس از تحویل امکان بازگشت کالا وجود ندارد.</li>
+            <li>اگر مشکلی در سفارش شما هست، همان روز با ما تماس بگیرید تا آن را درست کنیم.</li>
+            <li>سفارش‌ها پیش از شروع آماده‌سازی بدون هزینه قابل لغو هستند.</li>
+            <li>لغو سفارش پس از شروع آماده‌سازی ممکن است قابل بازپرداخت نباشد.</li>
           </ul>
         </div>
         <div className="card p-7 lg:col-span-2">
-          <h2 className="font-display text-xl font-semibold">Pickup</h2>
+          <h2 className="font-display text-xl font-semibold">تحویل حضوری</h2>
           <p className="mt-3 text-sm text-muted">
             {commerce?.pickupEnabled
-              ? 'Pickup is available from the counter during opening hours. Bring your order number.'
-              : 'Pickup is currently unavailable — delivery only.'}
+              ? 'تحویل حضوری در ساعات کاری از باجه فروشگاه امکان‌پذیر است. شماره سفارش خود را همراه داشته باشید.'
+              : 'تحویل حضوری در حال حاضر فعال نیست — فقط ارسال.'}
           </p>
         </div>
       </div>
@@ -189,13 +190,13 @@ export function Shipping() {
 
 export function Privacy() {
   return (
-    <PageShell eyebrow="Legal" title="Privacy policy" intro="Last updated for this demo store.">
+    <PageShell eyebrow="حقوقی" title="سیاست حفظ حریم خصوصی" intro="آخرین به‌روزرسانی برای این فروشگاه نمایشی.">
       <div className="prose-sm max-w-3xl space-y-4 text-sm leading-relaxed text-muted">
-        <p>We collect only what we need to prepare and deliver your order: your name, contact details, delivery address and order history.</p>
-        <p>Payment is handled by our payment provider. We never collect or store raw card details on our servers.</p>
-        <p>Newsletter subscriptions store your email address only, and you can unsubscribe at any time.</p>
-        <p>We do not sell your personal data. Data is retained for as long as needed to service your account and meet legal obligations.</p>
-        <p>To request access to, or deletion of, your data, contact us using the details on the contact page.</p>
+        <p>ما فقط اطلاعاتی را جمع می‌کنیم که برای آماده‌سازی و تحویل سفارش شما لازم است: نام، اطلاعات تماس، نشانی تحویل و تاریخچه سفارش‌ها.</p>
+        <p>پرداخت توسط درگاه پرداخت ما انجام می‌شود. ما هرگز اطلاعات خام کارت را روی سرورهای خود دریافت یا ذخیره نمی‌کنیم.</p>
+        <p>عضویت در خبرنامه فقط نشانی ایمیل شما را ذخیره می‌کند و هر زمان می‌توانید لغو عضویت کنید.</p>
+        <p>ما داده‌های شخصی شما را نمی‌فروشیم. داده‌ها تا زمانی که برای سرویس‌دهی به حساب شما و رعایت الزامات قانونی لازم باشد نگهداری می‌شوند.</p>
+        <p>برای درخواست دسترسی به داده‌های خود یا حذف آن‌ها، از اطلاعات صفحه تماس با ما استفاده کنید.</p>
       </div>
     </PageShell>
   );
@@ -203,13 +204,13 @@ export function Privacy() {
 
 export function Terms() {
   return (
-    <PageShell eyebrow="Legal" title="Terms & conditions" intro="The agreement between you and this store.">
+    <PageShell eyebrow="حقوقی" title="قوانین و مقررات" intro="توافق میان شما و این فروشگاه.">
       <div className="prose-sm max-w-3xl space-y-4 text-sm leading-relaxed text-muted">
-        <p>By placing an order you confirm that the information you provide is accurate and that you are able to enter into a contract.</p>
-        <p>All prices are shown in {`the store currency`} and include applicable taxes where noted. Prices and availability may change without notice.</p>
-        <p>Product photography is representative; handmade desserts may vary slightly in appearance.</p>
-        <p>Orders are confirmed once accepted by our team. This demo store processes orders in test mode and does not take real payments.</p>
-        <p>These terms are provided for demonstration purposes and are not legal advice.</p>
+        <p>با ثبت سفارش تأیید می‌کنید که اطلاعات ارائه‌شده شما درست است و توانایی بستن قرارداد را دارید.</p>
+        <p>همه قیمت‌ها به واحد پول فروشگاه نمایش داده می‌شوند و در صورت ذکر، شامل مالیات مربوطه هستند. قیمت‌ها و موجودی ممکن است بدون اطلاع قبلی تغییر کنند.</p>
+        <p>تصاویر محصولات جنبه نمایشی دارند؛ دسرهای دست‌ساز ممکن است ظاهری کمی متفاوت داشته باشند.</p>
+        <p>سفارش‌ها پس از پذیرش توسط تیم ما تأیید می‌شوند. این فروشگاه نمایشی سفارش‌ها را در حالت آزمایشی پردازش می‌کند و پرداخت واقعی دریافت نمی‌کند.</p>
+        <p>این قوانین فقط برای اهداف نمایشی ارائه شده‌اند و مشاوره حقوقی نیستند.</p>
       </div>
     </PageShell>
   );
@@ -218,14 +219,14 @@ export function Terms() {
 export function NotFound() {
   return (
     <div className="container-x py-24 text-center">
-      <p className="font-hand text-3xl text-rose">oops</p>
-      <h1 className="h-display mt-2 text-4xl">This page is not on the menu</h1>
+      <p className="font-hand text-3xl text-rose">اوه!</p>
+      <h1 className="h-display mt-2 text-4xl">این صفحه در منو نیست</h1>
       <p className="mt-3 text-sm text-muted">
-        The page you were looking for could not be found.
+        صفحه‌ای که به دنبال آن بودید پیدا نشد.
       </p>
       <div className="mt-7 flex justify-center gap-3">
-        <Link to="/" className="btn-dark">Back home</Link>
-        <Link to="/shop" className="btn-ghost">Shop all desserts</Link>
+        <Link to="/" className="btn-dark">بازگشت به خانه</Link>
+        <Link to="/shop" className="btn-ghost">خرید همه دسرها</Link>
       </div>
     </div>
   );

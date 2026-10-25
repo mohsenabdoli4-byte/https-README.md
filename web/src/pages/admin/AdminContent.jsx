@@ -29,7 +29,7 @@ export default function AdminContent() {
     try {
       await api.put('/admin/settings/content', content);
       await reload();
-      success('Homepage content saved.');
+      success('محتوای صفحه اصلی ذخیره شد.');
     } catch (err) {
       error(err.message);
     } finally {
@@ -65,98 +65,98 @@ export default function AdminContent() {
     <form onSubmit={save}>
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="h-display text-3xl">Website content</h1>
-          <p className="mt-1 text-sm text-muted">Edit the homepage copy, banners and footer text.</p>
+          <h1 className="h-display text-3xl">محتوای وب‌سایت</h1>
+          <p className="mt-1 text-sm text-muted">ویرایش متن صفحه اصلی، بنرها و متن پاورقی.</p>
         </div>
         <button type="submit" disabled={busy} className="btn-dark">
-          {busy ? 'Saving…' : 'Save content'}
+          {busy ? 'در حال ذخیره…' : 'ذخیره محتوا'}
         </button>
       </div>
 
       <div className="mt-6 space-y-6">
         <section className="card p-6">
-          <h2 className="font-display text-xl font-semibold">Hero</h2>
+          <h2 className="font-display text-xl font-semibold">بخش نخست (هیرو)</h2>
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
-            <Text label="Eyebrow" path={['hero', 'eyebrow']} />
-            <Text label="Headline" path={['hero', 'headline']} />
+            <Text label="متن بالای عنوان" path={['hero', 'eyebrow']} />
+            <Text label="تیتر" path={['hero', 'headline']} />
             <div className="sm:col-span-2">
-              <Text label="Supporting text" path={['hero', 'subtext']} area />
+              <Text label="متن پشتیبان" path={['hero', 'subtext']} area />
             </div>
-            <Text label="Primary button label" path={['hero', 'primaryCta', 'label']} />
-            <Text label="Primary button link" path={['hero', 'primaryCta', 'href']} />
-            <Text label="Secondary button label" path={['hero', 'secondaryCta', 'label']} />
-            <Text label="Secondary button link" path={['hero', 'secondaryCta', 'href']} />
+            <Text label="برچسب دکمه اصلی" path={['hero', 'primaryCta', 'label']} />
+            <Text label="پیوند دکمه اصلی" path={['hero', 'primaryCta', 'href']} />
+            <Text label="برچسب دکمه دوم" path={['hero', 'secondaryCta', 'label']} />
+            <Text label="پیوند دکمه دوم" path={['hero', 'secondaryCta', 'href']} />
             <div className="sm:col-span-2">
-              <Text label="Hero image URL" path={['hero', 'image']} />
+              <Text label="نشانی تصویر بخش نخست" path={['hero', 'image']} />
             </div>
           </div>
         </section>
 
         <section className="card p-6">
-          <h2 className="font-display text-xl font-semibold">Section headings</h2>
+          <h2 className="font-display text-xl font-semibold">عنوان بخش‌ها</h2>
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
-            <Text label="Categories title" path={['categoriesTitle']} />
-            <Text label="Bestsellers title" path={['bestsellersTitle']} />
+            <Text label="عنوان دسته‌بندی‌ها" path={['categoriesTitle']} />
+            <Text label="عنوان پرفروش‌ها" path={['bestsellersTitle']} />
             <div className="sm:col-span-2">
-              <Text label="Categories subtitle" path={['categoriesSubtitle']} area />
+              <Text label="زیرعنوان دسته‌بندی‌ها" path={['categoriesSubtitle']} area />
             </div>
             <div className="sm:col-span-2">
-              <Text label="Bestsellers subtitle" path={['bestsellersSubtitle']} area />
+              <Text label="زیرعنوان پرفروش‌ها" path={['bestsellersSubtitle']} area />
             </div>
           </div>
         </section>
 
         <section className="card p-6">
-          <h2 className="font-display text-xl font-semibold">Seasonal collection</h2>
+          <h2 className="font-display text-xl font-semibold">مجموعه فصلی</h2>
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
-            <Text label="Title" path={['seasonal', 'title']} />
-            <Text label="Active from" path={['seasonal', 'activeFrom']} />
+            <Text label="عنوان" path={['seasonal', 'title']} />
+            <Text label="فعال از" path={['seasonal', 'activeFrom']} />
             <div className="sm:col-span-2">
-              <Text label="Subtitle" path={['seasonal', 'subtitle']} area />
+              <Text label="زیرعنوان" path={['seasonal', 'subtitle']} area />
             </div>
-            <Text label="Active to" path={['seasonal', 'activeTo']} />
+            <Text label="فعال تا" path={['seasonal', 'activeTo']} />
           </div>
         </section>
 
         <section className="card p-6">
-          <h2 className="font-display text-xl font-semibold">Cake banner</h2>
+          <h2 className="font-display text-xl font-semibold">بنر کیک</h2>
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
-            <Text label="Headline" path={['cakeBanner', 'headline']} />
-            <Text label="Primary button label" path={['cakeBanner', 'primaryCta', 'label']} />
-            <Text label="Secondary button label" path={['cakeBanner', 'secondaryCta', 'label']} />
-            <Text label="Primary button link" path={['cakeBanner', 'primaryCta', 'href']} />
+            <Text label="تیتر" path={['cakeBanner', 'headline']} />
+            <Text label="برچسب دکمه اصلی" path={['cakeBanner', 'primaryCta', 'label']} />
+            <Text label="برچسب دکمه دوم" path={['cakeBanner', 'secondaryCta', 'label']} />
+            <Text label="پیوند دکمه اصلی" path={['cakeBanner', 'primaryCta', 'href']} />
             <div className="sm:col-span-2">
-              <Text label="Body" path={['cakeBanner', 'body']} area rows={3} />
+              <Text label="متن" path={['cakeBanner', 'body']} area rows={3} />
             </div>
           </div>
         </section>
 
         <section className="card p-6">
-          <h2 className="font-display text-xl font-semibold">Brand story & newsletter</h2>
+          <h2 className="font-display text-xl font-semibold">داستان برند و خبرنامه</h2>
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
-            <Text label="Story title" path={['story', 'title']} />
-            <Text label="Story link label" path={['story', 'link', 'label']} />
+            <Text label="عنوان داستان" path={['story', 'title']} />
+            <Text label="برچسب پیوند داستان" path={['story', 'link', 'label']} />
             <div className="sm:col-span-2">
-              <Text label="Story body" path={['story', 'body']} area rows={4} />
+              <Text label="متن داستان" path={['story', 'body']} area rows={4} />
             </div>
-            <Text label="Newsletter title" path={['newsletter', 'title']} />
-            <Text label="Newsletter body" path={['newsletter', 'body']} area />
+            <Text label="عنوان خبرنامه" path={['newsletter', 'title']} />
+            <Text label="متن خبرنامه" path={['newsletter', 'body']} area />
           </div>
         </section>
 
         <section className="card p-6">
-          <h2 className="font-display text-xl font-semibold">Footer</h2>
+          <h2 className="font-display text-xl font-semibold">پاورقی</h2>
           <div className="mt-4">
-            <Text label="Brand description" path={['footer', 'description']} area rows={3} />
+            <Text label="توضیح برند" path={['footer', 'description']} area rows={3} />
           </div>
           <p className="mt-3 text-xs text-muted">
-            Footer link columns are managed in the settings file for now.
+            ستون‌های پیوند پاورقی فعلاً از فایل تنظیمات مدیریت می‌شوند.
           </p>
         </section>
       </div>
 
       <button type="submit" disabled={busy} className="btn-dark mt-6">
-        {busy ? 'Saving…' : 'Save content'}
+        {busy ? 'در حال ذخیره…' : 'ذخیره محتوا'}
       </button>
     </form>
   );

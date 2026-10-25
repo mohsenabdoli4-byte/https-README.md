@@ -10,13 +10,13 @@ import { PHOTOS } from '../lib/images.js';
 
 const BASE_PRICE = 4500; // 6" base cake
 const SIZES = [
-  { label: '6" · serves 8', surcharge: 0 },
-  { label: '8" · serves 14', surcharge: 1800 },
-  { label: '10" · serves 22', surcharge: 3600 },
+  { label: '۶ اینچ · برای ۸ نفر', surcharge: 0 },
+  { label: '۸ اینچ · برای ۱۴ نفر', surcharge: 1800 },
+  { label: '۱۰ اینچ · برای ۲۲ نفر', surcharge: 3600 },
 ];
-const FLAVOURS = ['Vanilla Bean', 'Dark Chocolate', 'Pistachio', 'Lemon'];
-const FILLINGS = ['Raspberry compote', 'Salted caramel', 'Vanilla cream', 'Chocolate ganache'];
-const FROSTINGS = ['Blush buttercream', 'Mascarpone cream', 'Dark chocolate', 'Torched meringue'];
+const FLAVOURS = ['وانیل', 'شکلات تلخ', 'پسته', 'لیمو'];
+const FILLINGS = ['مغزی تمشک', 'کارامل نمکی', 'کرم وانیل', 'گاناش شکلات'];
+const FROSTINGS = ['خامه‌ای صورتی', 'خامه ماسکارپونه', 'شکلات تلخ', 'مرنگ کاراملی'];
 
 export default function CustomCake() {
   const { symbol } = useSite();
@@ -43,7 +43,7 @@ export default function CustomCake() {
         config.flavour,
         config.filling,
         config.frosting,
-        config.message && `“${config.message}”`,
+        config.message && `«${config.message}»`,
       ].filter(Boolean),
     [config]
   );
@@ -53,7 +53,7 @@ export default function CustomCake() {
       {
         id: `custom-${Date.now()}`,
         slug: 'custom-cake',
-        name: 'Custom Celebration Cake',
+        name: 'کیک جشن سفارشی',
         image_url: PHOTOS.cakes[3],
         price_cents: total,
         variants: [],
@@ -72,7 +72,7 @@ export default function CustomCake() {
         },
       }
     );
-    success('Your custom cake has been added to the bag.');
+    success('کیک سفارشی شما به سبد خرید اضافه شد.');
     navigate('/cart');
   };
 
@@ -95,17 +95,17 @@ export default function CustomCake() {
     <div className="container-x py-10">
       <div className="grid gap-10 lg:grid-cols-[1fr_420px]">
         <div>
-          <p className="eyebrow">Cake builder</p>
-          <h1 className="h-display mt-3 text-4xl sm:text-5xl">Design your cake</h1>
+          <p className="eyebrow">کیک‌ساز</p>
+          <h1 className="h-display mt-3 text-4xl sm:text-5xl">کیک خود را طراحی کنید</h1>
           <p className="mt-4 max-w-xl text-sm leading-relaxed text-muted">
-            Choose the size, flavour and finish, add a personal message, and we will bake it to order.
-            Cakes need 48 hours' notice; final pricing is confirmed at checkout.
+            اندازه، طعم و روکش را انتخاب کنید، پیام شخصی خود را اضافه کنید و ما آن را به سفارش شما می‌پزیم.
+            کیک‌ها به ۴۸ ساعت زمان نیاز دارند؛ قیمت نهایی هنگام تسویه حساب تأیید می‌شود.
           </p>
 
           <div className="mt-8 space-y-5">
             <Field
               id="cake-size"
-              label="Size"
+              label="اندازه"
               options={SIZES.map((s) => s.label)}
               value={config.size}
               onChange={(v) => setConfig((c) => ({ ...c, size: v }))}
@@ -113,14 +113,14 @@ export default function CustomCake() {
             <div className="grid gap-5 sm:grid-cols-2">
               <Field
                 id="cake-flavour"
-                label="Sponge flavour"
+                label="طعم اسفنج"
                 options={FLAVOURS}
                 value={config.flavour}
                 onChange={(v) => setConfig((c) => ({ ...c, flavour: v }))}
               />
               <Field
                 id="cake-filling"
-                label="Filling"
+                label="مغزی"
                 options={FILLINGS}
                 value={config.filling}
                 onChange={(v) => setConfig((c) => ({ ...c, filling: v }))}
@@ -128,30 +128,30 @@ export default function CustomCake() {
             </div>
             <Field
               id="cake-frosting"
-              label="Frosting"
+              label="روکش"
               options={FROSTINGS}
               value={config.frosting}
               onChange={(v) => setConfig((c) => ({ ...c, frosting: v }))}
             />
             <div>
               <label htmlFor="cake-note" className="label">
-                Personalised message (optional)
+                پیام شخصی‌سازی‌شده (اختیاری)
               </label>
               <input
                 id="cake-note"
                 value={config.message}
                 onChange={(e) => setConfig((c) => ({ ...c, message: e.target.value.slice(0, 60) }))}
-                placeholder="Happy birthday, Elodie!"
+                placeholder="تولدت مبارک!"
                 className="field"
               />
             </div>
             <div className="rounded-3xl bg-butter/60 p-5 text-sm text-cocoa/80">
               <p className="flex items-center gap-2 font-semibold text-cocoa">
-                <Cake className="h-4 w-4 text-rose" /> Allergen notice
+                <Cake className="h-4 w-4 text-rose" /> هشدار آلرژن
               </p>
               <p className="mt-2">
-                All cakes contain wheat, egg and dairy, and are prepared in a kitchen that handles nuts
-                and sesame. Tell us about allergies in the order notes and we will confirm what is possible.
+                همه کیک‌ها حاوی گندم، تخم‌مرغ و لبنیات هستند و در آشپزخانه‌ای تهیه می‌شوند که با مغزها
+                و کنجد سر و کار دارد. آلرژی‌ها را در توضیحات سفارش بنویسید تا امکان‌سنجی را تأیید کنیم.
               </p>
             </div>
           </div>
@@ -161,11 +161,11 @@ export default function CustomCake() {
           <div className="card overflow-hidden">
             <img
               src={PHOTOS.cakes[3]}
-              alt="A custom layered celebration cake"
+              alt="کیک لایه‌ای جشن سفارشی"
               className="h-56 w-full object-cover"
             />
             <div className="p-6">
-              <h2 className="font-display text-xl font-semibold">Your cake</h2>
+              <h2 className="font-display text-xl font-semibold">کیک شما</h2>
               <ul className="mt-4 space-y-2 text-sm">
                 {summary.map((s) => (
                   <li key={s} className="flex items-start gap-2 text-cocoa/80">
@@ -175,14 +175,14 @@ export default function CustomCake() {
                 ))}
               </ul>
               <div className="mt-6 flex items-center justify-between border-t border-cocoa/10 pt-4">
-                <span className="text-sm text-muted">Estimated total</span>
+                <span className="text-sm text-muted">مجموع برآوردی</span>
                 <span className="font-display text-2xl font-semibold">{money(total, symbol)}</span>
               </div>
               <button onClick={addCustomCake} className="btn-dark mt-5 w-full">
-                Add to bag
+                افزودن به سبد خرید
               </button>
               <p className="mt-3 text-center text-xs text-muted">
-                Paid options update the total. Availability is confirmed when you choose a date.
+                گزینه‌های پولی مجموع را به‌روز می‌کنند. موجودی هنگام انتخاب تاریخ تأیید می‌شود.
               </p>
             </div>
           </div>

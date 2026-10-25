@@ -15,7 +15,7 @@ export default function Footer() {
     setBusy(true);
     try {
       const res = await api.post('/newsletter', { email });
-      success(res.message || 'You are on the list.');
+      success(res.message || 'ایمیل شما ثبت شد.');
       setEmail('');
     } catch (err) {
       error(err.message);
@@ -44,7 +44,7 @@ export default function Footer() {
 
             <form onSubmit={subscribe} className="mt-6 max-w-sm">
               <label htmlFor="footer-email" className="label">
-                Join the newsletter
+                عضویت در خبرنامه
               </label>
               <div className="flex gap-2">
                 <input
@@ -54,10 +54,10 @@ export default function Footer() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@example.com"
-                  className="field"
+                  className="field ltr"
                 />
                 <button type="submit" disabled={busy} className="btn-dark shrink-0">
-                  {busy ? '…' : 'Join'}
+                  {busy ? '…' : 'عضویت'}
                 </button>
               </div>
             </form>
@@ -97,31 +97,31 @@ export default function Footer() {
 
         <div className="mt-12 grid gap-6 border-t border-cocoa/10 pt-8 text-sm text-muted sm:grid-cols-3">
           <div>
-            <h3 className="mb-2 font-semibold text-cocoa">Visit</h3>
+            <h3 className="mb-2 font-semibold text-cocoa">بازدید حضوری</h3>
             <p>{contact?.address}</p>
-            <p>{contact?.phone}</p>
-            <a href={`mailto:${contact?.email}`} className="hover:text-rose">
+            <p className="ltr text-start">{contact?.phone}</p>
+            <a href={`mailto:${contact?.email}`} className="ltr inline-block hover:text-rose">
               {contact?.email}
             </a>
           </div>
           <div>
-            <h3 className="mb-2 font-semibold text-cocoa">Opening hours</h3>
+            <h3 className="mb-2 font-semibold text-cocoa">ساعات کاری</h3>
             {(contact?.hours || []).map((h) => (
               <p key={h.day}>
-                <span className="text-cocoa/80">{h.day}:</span> {h.time}
+                <span className="text-cocoa/80">{h.day}:</span> <span className="ltr inline-block">{h.time}</span>
               </p>
             ))}
           </div>
           <div>
-            <h3 className="mb-2 font-semibold text-cocoa">Good to know</h3>
-            <p>Orders are baked to order. Cakes need 48 hours' notice.</p>
-            <p className="mt-2">Allergen information is available on every product page.</p>
+            <h3 className="mb-2 font-semibold text-cocoa">خوب است بدانید</h3>
+            <p>همه سفارش‌ها به‌صورت سفارشی پخته می‌شوند. کیک‌ها به ۴۸ ساعت زمان نیاز دارند.</p>
+            <p className="mt-2">اطلاعات آلرژن‌ها در صفحه هر محصول در دسترس است.</p>
           </div>
         </div>
 
         <div className="mt-10 flex flex-col items-center justify-between gap-3 border-t border-cocoa/10 pt-6 text-xs text-muted sm:flex-row">
-          <p>© {new Date().getFullYear()} {brandName}. All rights reserved.</p>
-          <p>Demo store — payments run in test mode until a provider is connected.</p>
+          <p>© {new Date().getFullYear()} {brandName}. همه حقوق محفوظ است.</p>
+          <p>فروشگاه نمایشی — پرداخت‌ها تا اتصال درگاه، در حالت آزمایشی انجام می‌شود.</p>
         </div>
       </div>
     </footer>

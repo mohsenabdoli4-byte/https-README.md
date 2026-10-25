@@ -8,16 +8,16 @@ export async function validatePromo(code, subtotalCents) {
   if (!code) return { discountCents: 0, promo: null, reason: null };
   const { rows } = await query('SELECT * FROM promotions WHERE upper(code) = upper($1)', [code]);
   const promo = rows[0];
-  if (!promo || !promo.active) return { discountCents: 0, promo: null, reason: 'Invalid code.' };
+  if (!promo || !promo.active) return { discountCents: 0, promo: null, reason: 'کد نامعتبر است.' };
   if (promo.expires_at && new Date(promo.expires_at) < new Date())
-    return { discountCents: 0, promo: null, reason: 'This code has expired.' };
+    return { discountCents: 0, promo: null, reason: 'این کد منقضی شده است.' };
   if (promo.usage_limit && promo.used_count >= promo.usage_limit)
-    return { discountCents: 0, promo: null, reason: 'This code has reached its limit.' };
+    return { discountCents: 0, promo: null, reason: 'این کد به حد استفاده رسیده است.' };
   if (subtotalCents < promo.min_subtotal_cents)
     return {
       discountCents: 0,
       promo: null,
-      reason: `Minimum order for this code is ${(promo.min_subtotal_cents / 100).toFixed(2)}.`,
+      reason: `حداقل سفارش برای این کد ${(promo.min_subtotal_cents / 100).toLocaleString('fa-IR')} تومان است.`,
     };
   const discountCents =
     promo.kind === 'percent'
@@ -30,7 +30,7 @@ router.post('/promotions/validate', async (req, res) => {
   const { code, subtotalCents = 0 } = req.body || {};
   const result = await validatePromo(code, Number(subtotalCents));
   if (!result.promo)
-    return res.status(400).json({ valid: false, error: result.reason || 'Invalid code.' });
+    return res.status(400).json({ valid: false, error: result.reason || 'کد نامعتبر است.' });
   res.json({
     valid: true,
     code: result.promo.code,
@@ -58,10 +58,10 @@ router.post('/orders', async (req, res) => {
   } = body;
 
   if (!Array.isArray(items) || items.length === 0)
-    return res.status(400).json({ error: 'Your cart is empty.' });
-  if (!email) return res.status(400).json({ error: 'An email address is required.' });
+    return res.status(400).json({ error: 'سبد خرید شما خالی است.' });
+  if (!email) return res.status(400).json({ error: 'نشانی ایمیل الزامی است.' });
   if (fulfillment === 'delivery' && !address)
-    return res.status(400).json({ error: 'A delivery address is required.' });
+    return res.status(400).json({ error: 'نشانی تحویل الزامی است.' });
 
   const commerce = (await getSetting('commerce')) || {};
   const taxRate = Number(commerce.taxRate ?? 0);
@@ -78,14 +78,14 @@ router.post('/orders', async (req, res) => {
     const product = byId[Number(raw.productId)];
     if (!product || product.archived) continue;
     if (!product.in_stock)
-      return res.status(409).json({ error: `${product.name} is currently unavailable.` });
+      return res.status(409).json({ error: `${product.name} در حال حاضر موجود نیست.` });
 
     const variants = product.variants || [];
     let unitPrice = product.price_cents;
     let variantLabel = null;
     if (raw.variantLabel) {
       const variant = variants.find((v) => v.label === raw.variantLabel);
-      if (!variant) return res.status(400).json({ error: 'Invalid product option.' });
+      if (!variant) return res.status(400).json({ error: 'گزینه محصول نامعتبر است.' });
       unitPrice = Number(variant.priceCents);
       variantLabel = variant.label;
     }
@@ -107,7 +107,7 @@ router.post('/orders', async (req, res) => {
   }
 
   if (lineItems.length === 0)
-    return res.status(400).json({ error: 'None of the items in your cart are available.' });
+    return res.status(400).json({ error: 'هیچ‌یک از اقلام سبد خرید شما موجود نیست.' });
 
   const { discountCents, promo } = await validatePromo(promoCode, subtotalCents);
   const fee =
@@ -180,9 +180,9 @@ router.get('/orders', requireAuth, async (req, res) => {
 router.get('/orders/:id', requireAuth, async (req, res) => {
   const { rows } = await query('SELECT * FROM orders WHERE id = $1', [req.params.id]);
   const order = rows[0];
-  if (!order) return res.status(404).json({ error: 'Order not found.' });
+  if (!order) return res.status(404).json({ error: 'سفارش پیدا نشد.' });
   if (req.user.role !== 'admin' && order.user_id !== req.user.id)
-    return res.status(403).json({ error: 'You cannot view this order.' });
+    return res.status(403).json({ error: 'شما اجازه مشاهده این سفارش را ندارید.' });
   res.json({ order });
 });
 

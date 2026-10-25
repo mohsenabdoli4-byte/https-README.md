@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, CheckCircle2 } from 'lucide-react';
 import { api } from '../lib/api.js';
-import { money, formatDate, STATUS_LABELS, STATUS_STYLES, ORDER_STATUSES } from '../lib/format.js';
+import { money, faNum, formatDate, STATUS_LABELS, STATUS_STYLES, PAYMENT_LABELS, ORDER_STATUSES } from '../lib/format.js';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useSite } from '../context/SiteContext.jsx';
 
@@ -29,15 +29,15 @@ export default function OrderDetail() {
   if (error) {
     return (
       <div className="container-x py-20 text-center">
-        <h1 className="h-display text-3xl">We could not open that order</h1>
+        <h1 className="h-display text-3xl">این سفارش باز نشد</h1>
         <p className="mt-3 text-sm text-muted">{error}</p>
-        <Link to="/account" className="btn-dark mt-6">Back to my account</Link>
+        <Link to="/account" className="btn-dark mt-6">بازگشت به حساب کاربری</Link>
       </div>
     );
   }
 
   if (!order) {
-    return <div className="container-x py-24 text-center text-sm text-muted">Loading order…</div>;
+    return <div className="container-x py-24 text-center text-sm text-muted">در حال بارگذاری سفارش…</div>;
   }
 
   const stepIndex = ORDER_STATUSES.indexOf(order.status);
@@ -46,21 +46,21 @@ export default function OrderDetail() {
   return (
     <div className="container-x py-10">
       <Link to="/account" className="inline-flex items-center gap-2 text-sm text-muted hover:text-rose">
-        <ArrowLeft className="h-4 w-4" /> Back to account
+        <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" /> بازگشت به حساب کاربری
       </Link>
 
       <div className="mt-5 flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="eyebrow">Order</p>
-          <h1 className="h-display mt-2 text-3xl sm:text-4xl">{order.order_number}</h1>
-          <p className="mt-2 text-sm text-muted">Placed {formatDate(order.created_at)}</p>
+          <p className="eyebrow">سفارش</p>
+          <h1 className="h-display mt-2 text-3xl sm:text-4xl ltr text-start">{order.order_number}</h1>
+          <p className="mt-2 text-sm text-muted">ثبت‌شده در {formatDate(order.created_at)}</p>
         </div>
         <div className="flex gap-2">
           <span className={`chip ${STATUS_STYLES[order.status] || 'bg-blush'}`}>
             {STATUS_LABELS[order.status] || order.status}
           </span>
           <span className={`chip ${order.payment_status === 'paid' ? 'bg-mint' : 'bg-butter/70'} text-cocoa`}>
-            Payment: {order.payment_status}
+            پرداخت: {PAYMENT_LABELS[order.payment_status] || order.payment_status}
           </span>
         </div>
       </div>
@@ -81,13 +81,13 @@ export default function OrderDetail() {
         </ol>
       ) : (
         <div className="mt-8 rounded-3xl bg-muted/15 p-5 text-sm text-muted">
-          This order was cancelled{order.cancel_reason ? `: ${order.cancel_reason}` : '.'}
+          این سفارش لغو شده است{order.cancel_reason ? `: ${order.cancel_reason}` : '.'}
         </div>
       )}
 
       <div className="mt-8 grid gap-6 lg:grid-cols-[1fr_360px]">
         <div className="card p-6">
-          <h2 className="font-display text-xl font-semibold">Items</h2>
+          <h2 className="font-display text-xl font-semibold">اقلام</h2>
           <ul className="mt-4 divide-y divide-cocoa/10">
             {order.items.map((i) => (
               <li key={`${i.productId}-${i.variantLabel}`} className="flex items-center gap-4 py-3">
@@ -95,12 +95,12 @@ export default function OrderDetail() {
                 <div className="flex-1 text-sm">
                   <p className="font-medium text-cocoa">{i.name}</p>
                   <p className="text-xs text-muted">
-                    {i.quantity} × {money(i.unitPriceCents, symbol)}
+                    {faNum(i.quantity)} × {money(i.unitPriceCents, symbol)}
                     {i.variantLabel ? ` · ${i.variantLabel}` : ''}
                     {i.flavor ? ` · ${i.flavor}` : ''}
                   </p>
                   {i.customization?.message && (
-                    <p className="text-xs text-cocoa/70">Message: “{i.customization.message}”</p>
+                    <p className="text-xs text-cocoa/70">پیام: «{i.customization.message}»</p>
                   )}
                 </div>
                 <p className="text-sm font-semibold">{money(i.lineTotalCents, symbol)}</p>
@@ -111,35 +111,35 @@ export default function OrderDetail() {
 
         <aside className="space-y-6">
           <div className="card p-6">
-            <h2 className="font-display text-xl font-semibold">Summary</h2>
+            <h2 className="font-display text-xl font-semibold">خلاصه</h2>
             <dl className="mt-4 space-y-2 text-sm">
-              <div className="flex justify-between"><dt className="text-muted">Subtotal</dt><dd>{money(order.subtotal_cents, symbol)}</dd></div>
+              <div className="flex justify-between"><dt className="text-muted">جمع اقلام</dt><dd>{money(order.subtotal_cents, symbol)}</dd></div>
               {order.discount_cents > 0 && (
-                <div className="flex justify-between text-rose"><dt>Discount {order.promo_code && `(${order.promo_code})`}</dt><dd>−{money(order.discount_cents, symbol)}</dd></div>
+                <div className="flex justify-between text-rose"><dt>تخفیف {order.promo_code && `(${order.promo_code})`}</dt><dd>−{money(order.discount_cents, symbol)}</dd></div>
               )}
-              <div className="flex justify-between"><dt className="text-muted">Delivery</dt><dd>{order.delivery_fee_cents === 0 ? 'Free' : money(order.delivery_fee_cents, symbol)}</dd></div>
-              <div className="flex justify-between"><dt className="text-muted">Tax</dt><dd>{money(order.tax_cents, symbol)}</dd></div>
-              <div className="flex justify-between border-t border-cocoa/10 pt-3 font-semibold"><dt>Total</dt><dd>{money(order.total_cents, symbol)}</dd></div>
+              <div className="flex justify-between"><dt className="text-muted">هزینه ارسال</dt><dd>{order.delivery_fee_cents === 0 ? 'رایگان' : money(order.delivery_fee_cents, symbol)}</dd></div>
+              <div className="flex justify-between"><dt className="text-muted">مالیات</dt><dd>{money(order.tax_cents, symbol)}</dd></div>
+              <div className="flex justify-between border-t border-cocoa/10 pt-3 font-semibold"><dt>مجموع</dt><dd>{money(order.total_cents, symbol)}</dd></div>
             </dl>
           </div>
 
           <div className="card p-6 text-sm">
-            <h2 className="font-display text-xl font-semibold">Fulfilment</h2>
+            <h2 className="font-display text-xl font-semibold">نحوه تحویل</h2>
             <p className="mt-3 text-cocoa">
-              {order.fulfillment === 'pickup' ? 'Pickup in store' : 'Local delivery'}
+              {order.fulfillment === 'pickup' ? 'تحویل حضوری در فروشگاه' : 'ارسال محلی'}
             </p>
             {order.address && (
               <p className="text-muted">
                 {order.address}
-                {order.city ? `, ${order.city}` : ''} {order.postal_code || ''}
+                {order.city ? `، ${order.city}` : ''} {order.postal_code || ''}
               </p>
             )}
             {order.delivery_date && (
               <p className="text-muted">
-                {new Date(order.delivery_date).toLocaleDateString()} · {order.time_slot}
+                <span className="ltr inline-block">{order.time_slot}</span> · {new Date(order.delivery_date).toLocaleDateString('fa-IR')}
               </p>
             )}
-            {order.instructions && <p className="mt-2 text-muted">Notes: {order.instructions}</p>}
+            {order.instructions && <p className="mt-2 text-muted">توضیحات: {order.instructions}</p>}
           </div>
         </aside>
       </div>

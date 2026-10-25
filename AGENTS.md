@@ -21,6 +21,21 @@ docker compose -f docker-compose.base44.yml up -d --build
 - Sign in with the seeded accounts: `admin@maisonfraise.test` / `Maison123!` (admin) and
   `demo@maisonfraise.test` / `Demo123!` (customer).
 
+## Localization (Persian / RTL)
+- The storefront and the admin dashboard are Persian. `<html lang="fa" dir="rtl">` is set in
+  `web/index.html`; the whole app inherits the direction from there.
+- Typography is **Vazirmatn** (Google Fonts); every Tailwind font stack in `web/tailwind.config.js`
+  leads with it, so Persian renders correctly while Latin brand text still falls back.
+- Prices are stored as minor units in the database and displayed in **Toman with Persian digits** by
+  `money()` in `web/src/lib/format.js`. `faNum()` converts numbers and `formatDate()` uses the Persian
+  (Jalali) calendar. Calculation, tax and payment logic are unchanged — only the display format.
+- Layout uses CSS logical properties (`ms-*`/`me-*`/`start-*`/`end-*`/`text-start`/`text-end`) and a
+  `rtl:` Tailwind variant (e.g. `rtl:-scale-x-100`) to mirror directional arrows. The `.ltr` utility
+  keeps emails, phone numbers and codes readable inside RTL text. Flex/grid mirror automatically.
+- Seed content (`server/src/migrate.js`) and default settings (`server/src/settings.js`) are Persian.
+  Seeding is gated by `SEED_VERSION`: bumping it re-syncs the demo categories, products, sample
+  testimonials and settings once on the next `migrate` run, then leaves admin edits alone.
+
 ## Quirks
 - Postgres credentials are local dev values generated for the sandbox; they are not secrets.
 - Sandbox-only overrides (Vite `allowedHosts`, HMR client port) are gated on `BASE44_PREVIEW_MODE === '1'`

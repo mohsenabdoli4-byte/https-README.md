@@ -6,10 +6,10 @@ import ProductCard from '../components/ProductCard.jsx';
 import Reveal from '../components/Reveal.jsx';
 
 const SORTS = [
-  { value: 'featured', label: 'Featured' },
-  { value: 'price-asc', label: 'Price: low to high' },
-  { value: 'price-desc', label: 'Price: high to low' },
-  { value: 'rating', label: 'Top rated' },
+  { value: 'featured', label: 'پیشنهاد ما' },
+  { value: 'price-asc', label: 'قیمت: از کم به زیاد' },
+  { value: 'price-desc', label: 'قیمت: از زیاد به کم' },
+  { value: 'rating', label: 'بیشترین امتیاز' },
 ];
 
 export default function Category() {
@@ -34,27 +34,27 @@ export default function Category() {
 
   return (
     <div className="container-x py-10">
-      <nav aria-label="Breadcrumb" className="text-xs text-muted">
+      <nav aria-label="مسیر صفحه" className="text-xs text-muted">
         <Link to="/" className="hover:text-rose">
-          Home
+          خانه
         </Link>{' '}
-        / <Link to="/shop" className="hover:text-rose">Shop</Link> /{' '}
+        / <Link to="/shop" className="hover:text-rose">فروشگاه</Link> /{' '}
         <span className="text-cocoa">{category?.name || slug}</span>
       </nav>
 
       <div className="mt-6 overflow-hidden rounded-5xl bg-blush">
         <div className="grid items-center gap-6 lg:grid-cols-2">
           <div className="p-8 sm:p-12">
-            <p className="eyebrow">Collection</p>
+            <p className="eyebrow">مجموعه</p>
             <h1 className="h-display mt-3 text-4xl sm:text-5xl">
-              {category?.name || 'Collection'}
+              {category?.name || 'مجموعه'}
             </h1>
             <p className="mt-4 max-w-md text-sm leading-relaxed text-cocoa/75">
               {category?.description}
             </p>
             <div className="mt-7">
               <label htmlFor="cat-sort" className="sr-only">
-                Sort products
+                مرتب‌سازی محصولات
               </label>
               <select
                 id="cat-sort"
@@ -89,11 +89,11 @@ export default function Category() {
           </div>
         ) : products.length === 0 ? (
           <div className="card p-12 text-center">
-            <h2 className="font-display text-2xl font-semibold">This collection is empty</h2>
-            <p className="mt-2 text-sm text-muted">We are restocking — browse everything instead.</p>
+            <h2 className="font-display text-2xl font-semibold">این مجموعه خالی است</h2>
+            <p className="mt-2 text-sm text-muted">در حال تأمین موجودی هستیم — همه محصولات را ببینید.</p>
             <Link to="/shop" className="btn-dark mt-6">
-              Shop all desserts
-              <ArrowRight className="h-4 w-4" />
+              خرید همه دسرها
+              <ArrowRight className="h-4 w-4 rtl:-scale-x-100" />
             </Link>
           </div>
         ) : (

@@ -75,7 +75,7 @@ router.get('/products', async (req, res) => {
 router.get('/products/:slug', async (req, res) => {
   const { rows } = await query(`${productSelect} WHERE p.slug = $1`, [req.params.slug]);
   const product = rows[0];
-  if (!product) return res.status(404).json({ error: 'Product not found.' });
+  if (!product) return res.status(404).json({ error: 'محصول پیدا نشد.' });
 
   const { rows: related } = await query(
     `${productSelect} WHERE p.category_id = $1 AND p.id <> $2 AND p.archived = false

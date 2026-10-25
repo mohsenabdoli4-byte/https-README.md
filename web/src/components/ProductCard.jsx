@@ -1,7 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { Heart, ShoppingBag, Eye } from 'lucide-react';
 import StarRating from './StarRating.jsx';
-import { money } from '../lib/format.js';
+import { money, faNum } from '../lib/format.js';
 import { useCart } from '../context/CartContext.jsx';
 import { useSite } from '../context/SiteContext.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
@@ -20,7 +20,7 @@ export default function ProductCard({ product, compact = false }) {
   const addToCart = (e) => {
     e.preventDefault();
     add(product, { quantity: 1 });
-    success(`${product.name} added to your bag.`);
+    success(`${product.name} به سبد خرید اضافه شد.`);
   };
 
   const wishlist = async (e) => {
@@ -32,7 +32,7 @@ export default function ProductCard({ product, compact = false }) {
     try {
       await api.post('/wishlist', { productId: product.id });
       setSaved(true);
-      success('Saved to your wishlist.');
+      success('به لیست علاقه‌مندی‌ها اضافه شد.');
     } catch (err) {
       error(err.message);
     }
@@ -50,24 +50,24 @@ export default function ProductCard({ product, compact = false }) {
             compact ? 'h-40' : 'h-56'
           }`}
         />
-        <div className="absolute left-3 top-3 flex flex-wrap gap-2">
-          {product.is_bestseller && <span className="chip bg-cocoa text-cream">Bestseller</span>}
-          {product.is_new && <span className="chip bg-mint text-cocoa">New</span>}
-          {product.is_seasonal && <span className="chip bg-strawberry text-cocoa">Seasonal</span>}
-          {!product.in_stock && <span className="chip bg-white text-muted">Sold out</span>}
+        <div className="absolute start-3 top-3 flex flex-wrap gap-2">
+          {product.is_bestseller && <span className="chip bg-cocoa text-cream">پرفروش</span>}
+          {product.is_new && <span className="chip bg-mint text-cocoa">جدید</span>}
+          {product.is_seasonal && <span className="chip bg-strawberry text-cocoa">فصلی</span>}
+          {!product.in_stock && <span className="chip bg-white text-muted">ناموجود</span>}
         </div>
         </Link>
-        <div className="absolute right-3 top-3 flex flex-col gap-2 opacity-0 transition group-hover:opacity-100">
+        <div className="absolute end-3 top-3 flex flex-col gap-2 opacity-0 transition group-hover:opacity-100">
           <button
             onClick={wishlist}
-            aria-label={`Save ${product.name} to wishlist`}
+            aria-label={`افزودن ${product.name} به علاقه‌مندی‌ها`}
             className="grid h-9 w-9 place-items-center rounded-full bg-white/90 text-cocoa shadow-card hover:bg-white"
           >
             <Heart className={`h-4 w-4 ${saved ? 'fill-rose text-rose' : ''}`} />
           </button>
           <Link
             to={`/product/${product.slug}`}
-            aria-label={`Quick view ${product.name}`}
+            aria-label={`نمایش سریع ${product.name}`}
             className="grid h-9 w-9 place-items-center rounded-full bg-white/90 text-cocoa shadow-card hover:bg-white"
           >
             <Eye className="h-4 w-4" />
@@ -105,17 +105,17 @@ export default function ProductCard({ product, compact = false }) {
               {money(product.price_cents, symbol)}
             </p>
             {product.variants?.length > 1 && (
-              <p className="text-xs text-muted">{product.variants.length} options</p>
+              <p className="text-xs text-muted">{faNum(product.variants.length)} گزینه</p>
             )}
           </div>
           <button
             onClick={addToCart}
             disabled={!product.in_stock}
             className="btn-rose !px-4 !py-2.5"
-            aria-label={`Add ${product.name} to bag`}
+            aria-label={`افزودن ${product.name} به سبد خرید`}
           >
             <ShoppingBag className="h-4 w-4" />
-            Add
+            افزودن
           </button>
         </div>
       </div>

@@ -2,16 +2,17 @@ import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { SlidersHorizontal, X } from 'lucide-react';
 import { api, qs } from '../lib/api.js';
+import { faNum } from '../lib/format.js';
 import ProductCard from '../components/ProductCard.jsx';
 import Reveal from '../components/Reveal.jsx';
 
 const SORTS = [
-  { value: 'featured', label: 'Featured' },
-  { value: 'price-asc', label: 'Price: low to high' },
-  { value: 'price-desc', label: 'Price: high to low' },
-  { value: 'newest', label: 'Newest' },
-  { value: 'bestseller', label: 'Bestselling' },
-  { value: 'rating', label: 'Top rated' },
+  { value: 'featured', label: 'پیشنهاد ما' },
+  { value: 'price-asc', label: 'قیمت: از کم به زیاد' },
+  { value: 'price-desc', label: 'قیمت: از زیاد به کم' },
+  { value: 'newest', label: 'جدیدترین' },
+  { value: 'bestseller', label: 'پرفروش‌ترین' },
+  { value: 'rating', label: 'بیشترین امتیاز' },
 ];
 
 export default function Shop() {
@@ -66,13 +67,13 @@ export default function Shop() {
   const FilterPanel = (
     <div className="space-y-6">
       <div>
-        <h3 className="label">Category</h3>
+        <h3 className="label">دسته‌بندی</h3>
         <div className="flex flex-wrap gap-2">
           <button
             onClick={() => update({ category: '' })}
             className={`chip ${!filters.category ? 'bg-cocoa text-cream' : 'bg-cream ring-1 ring-cocoa/10'}`}
           >
-            All
+            همه
           </button>
           {categories.map((c) => (
             <button
@@ -90,7 +91,7 @@ export default function Shop() {
 
       <div>
         <label className="label" htmlFor="filter-flavor">
-          Flavour
+          طعم
         </label>
         <select
           id="filter-flavor"
@@ -98,7 +99,7 @@ export default function Shop() {
           onChange={(e) => update({ flavor: e.target.value })}
           className="field"
         >
-          <option value="">Any flavour</option>
+          <option value="">همه طعم‌ها</option>
           {flavors.map((f) => (
             <option key={f} value={f}>
               {f}
@@ -109,7 +110,7 @@ export default function Shop() {
 
       <div>
         <label className="label" htmlFor="filter-max">
-          Max price
+          حداکثر قیمت
         </label>
         <select
           id="filter-max"
@@ -117,21 +118,21 @@ export default function Shop() {
           onChange={(e) => update({ max: e.target.value })}
           className="field"
         >
-          <option value="">Any price</option>
-          <option value="1500">Under $15</option>
-          <option value="3000">Under $30</option>
-          <option value="5000">Under $50</option>
-          <option value="10000">Under $100</option>
+          <option value="">هر قیمتی</option>
+          <option value="1500">زیر ۱۵ تومان</option>
+          <option value="3000">زیر ۳۰ تومان</option>
+          <option value="5000">زیر ۵۰ تومان</option>
+          <option value="10000">زیر ۱۰۰ تومان</option>
         </select>
       </div>
 
       <div className="space-y-2">
-        <h3 className="label">Quick filters</h3>
+        <h3 className="label">فیلترهای سریع</h3>
         {[
-          { key: 'inStock', label: 'Available now' },
-          { key: 'bestseller', label: 'Bestsellers' },
-          { key: 'new', label: 'New arrivals' },
-          { key: 'seasonal', label: 'Seasonal' },
+          { key: 'inStock', label: 'موجود' },
+          { key: 'bestseller', label: 'پرفروش‌ها' },
+          { key: 'new', label: 'تازه‌ها' },
+          { key: 'seasonal', label: 'فصلی' },
         ].map((f) => (
           <label key={f.key} className="flex cursor-pointer items-center gap-3 text-sm text-cocoa/80">
             <input
@@ -150,7 +151,7 @@ export default function Shop() {
           onClick={() => setParams(filters.q ? { q: filters.q } : {}, { replace: true })}
           className="btn-ghost w-full"
         >
-          Clear filters
+          پاک کردن فیلترها
         </button>
       )}
     </div>
@@ -160,23 +161,23 @@ export default function Shop() {
     <div className="container-x py-10">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="eyebrow">The full menu</p>
+          <p className="eyebrow">منوی کامل</p>
           <h1 className="h-display mt-2 text-4xl sm:text-5xl">
-            {filters.q ? `Results for “${filters.q}”` : 'Shop all desserts'}
+            {filters.q ? `نتایج برای «${filters.q}»` : 'خرید همه دسرها'}
           </h1>
           <p className="mt-2 text-sm text-muted">
-            {loading ? 'Loading…' : `${products.length} ${products.length === 1 ? 'dessert' : 'desserts'}`}
+            {loading ? 'در حال بارگذاری…' : `${faNum(products.length)} دسر`}
           </p>
         </div>
 
         <div className="flex items-center gap-3">
           <button onClick={() => setShowFilters((s) => !s)} className="btn-ghost lg:hidden">
             <SlidersHorizontal className="h-4 w-4" />
-            Filters {activeCount > 0 && `(${activeCount})`}
+            فیلترها {activeCount > 0 && `(${faNum(activeCount)})`}
           </button>
           <div>
             <label htmlFor="sort" className="sr-only">
-              Sort products
+              مرتب‌سازی محصولات
             </label>
             <select
               id="sort"
@@ -197,8 +198,8 @@ export default function Shop() {
       {showFilters && (
         <div className="mt-6 card p-6 lg:hidden">
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="font-display text-lg font-semibold">Filters</h2>
-            <button onClick={() => setShowFilters(false)} aria-label="Close filters">
+            <h2 className="font-display text-lg font-semibold">فیلترها</h2>
+            <button onClick={() => setShowFilters(false)} aria-label="بستن فیلترها">
               <X className="h-5 w-5" />
             </button>
           </div>
@@ -220,15 +221,15 @@ export default function Shop() {
             </div>
           ) : products.length === 0 ? (
             <div className="card p-12 text-center">
-              <h2 className="font-display text-2xl font-semibold">Nothing matches those filters</h2>
+              <h2 className="font-display text-2xl font-semibold">چیزی با این فیلترها پیدا نشد</h2>
               <p className="mt-2 text-sm text-muted">
-                Try widening your price range or clearing a filter.
+                محدوده قیمت را گسترده‌تر کنید یا یکی از فیلترها را بردارید.
               </p>
               <button
                 onClick={() => setParams(filters.q ? { q: filters.q } : {}, { replace: true })}
                 className="btn-dark mt-6"
               >
-                Clear filters
+                پاک کردن فیلترها
               </button>
             </div>
           ) : (

@@ -32,7 +32,7 @@ export function SiteProvider({ children }) {
       commerce: site?.commerce,
       content: site?.content,
       announcement: site?.announcement,
-      symbol: site?.commerce?.currencySymbol || '$',
+      symbol: site?.commerce?.currencySymbol || 'تومان',
     }),
     [site, loading, load]
   );

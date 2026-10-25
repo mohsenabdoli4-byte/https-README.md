@@ -24,7 +24,7 @@ export function ToastProvider({ children }) {
   return (
     <ToastContext.Provider value={value}>
       {children}
-      <div className="pointer-events-none fixed bottom-5 right-5 z-[100] flex w-[min(92vw,360px)] flex-col gap-3">
+      <div className="pointer-events-none fixed bottom-5 end-5 z-[100] flex w-[min(92vw,360px)] flex-col gap-3">
         {toasts.map((t) => (
           <div
             key={t.id}
@@ -39,7 +39,7 @@ export function ToastProvider({ children }) {
             <span className="flex-1">{t.message}</span>
             <button
               onClick={() => setToasts((prev) => prev.filter((x) => x.id !== t.id))}
-              aria-label="Dismiss notification"
+              aria-label="بستن پیام"
               className="text-cream/60 hover:text-cream"
             >
               <X className="h-4 w-4" />

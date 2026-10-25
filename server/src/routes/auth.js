@@ -21,14 +21,14 @@ const publicUser = (u) => ({
 router.post('/signup', async (req, res) => {
   const { email, password, fullName, phone } = req.body || {};
   if (!email || !password)
-    return res.status(400).json({ error: 'Email and password are required.' });
+    return res.status(400).json({ error: 'ایمیل و رمز عبور الزامی است.' });
   if (String(password).length < 8)
-    return res.status(400).json({ error: 'Password must be at least 8 characters.' });
+    return res.status(400).json({ error: 'رمز عبور باید حداقل ۸ کاراکتر باشد.' });
 
   const normalized = String(email).trim().toLowerCase();
   const { rows: existing } = await query('SELECT id FROM users WHERE email = $1', [normalized]);
   if (existing.length)
-    return res.status(409).json({ error: 'An account with that email already exists.' });
+    return res.status(409).json({ error: 'حسابی با این ایمیل از قبل وجود دارد.' });
 
   const hash = await bcrypt.hash(String(password), 10);
   const { rows } = await query(
@@ -44,14 +44,14 @@ router.post('/signup', async (req, res) => {
 router.post('/login', async (req, res) => {
   const { email, password } = req.body || {};
   if (!email || !password)
-    return res.status(400).json({ error: 'Email and password are required.' });
+    return res.status(400).json({ error: 'ایمیل و رمز عبور الزامی است.' });
   const { rows } = await query('SELECT * FROM users WHERE email = $1', [
     String(email).trim().toLowerCase(),
   ]);
   const user = rows[0];
-  if (!user) return res.status(401).json({ error: 'Incorrect email or password.' });
+  if (!user) return res.status(401).json({ error: 'ایمیل یا رمز عبور نادرست است.' });
   const ok = await bcrypt.compare(String(password), user.password_hash);
-  if (!ok) return res.status(401).json({ error: 'Incorrect email or password.' });
+  if (!ok) return res.status(401).json({ error: 'ایمیل یا رمز عبور نادرست است.' });
   setAuthCookie(res, signToken(user));
   res.json({ user: publicUser(user) });
 });
@@ -62,7 +62,7 @@ router.post('/logout', (req, res) => {
 });
 
 router.get('/me', (req, res) => {
-  if (!req.user) return res.status(401).json({ error: 'Not signed in.' });
+  if (!req.user) return res.status(401).json({ error: 'وارد نشده‌اید.' });
   res.json({ user: publicUser(req.user) });
 });
 
@@ -86,13 +86,13 @@ router.get('/addresses', requireAuth, async (req, res) => {
 
 router.post('/addresses', requireAuth, async (req, res) => {
   const { label, line1, city, postalCode, isDefault } = req.body || {};
-  if (!line1) return res.status(400).json({ error: 'Address line is required.' });
+  if (!line1) return res.status(400).json({ error: 'نشانی الزامی است.' });
   if (isDefault)
     await query('UPDATE addresses SET is_default = false WHERE user_id = $1', [req.user.id]);
   const { rows } = await query(
     `INSERT INTO addresses (user_id, label, line1, city, postal_code, is_default)
      VALUES ($1,$2,$3,$4,$5,$6) RETURNING *`,
-    [req.user.id, label || 'Home', line1, city || null, postalCode || null, !!isDefault]
+    [req.user.id, label || 'خانه', line1, city || null, postalCode || null, !!isDefault]
   );
   res.status(201).json({ address: rows[0] });
 });

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Pencil, Plus, Archive, RotateCcw, X } from 'lucide-react';
 import { api } from '../../lib/api.js';
-import { money } from '../../lib/format.js';
+import { money, faNum } from '../../lib/format.js';
 import { useSite } from '../../context/SiteContext.jsx';
 import { useToast } from '../../context/ToastContext.jsx';
 
@@ -35,7 +35,7 @@ function toForm(p) {
     shortDescription: p.short_description || '',
     description: p.description || '',
     prepTime: p.prep_time || '',
-    flavors: (p.flavors || []).join(', '),
+    flavors: (p.flavors || []).join('، '),
     variants: (p.variants || []).map((v) => `${v.label}|${(v.priceCents / 100).toFixed(2)}`).join('\n'),
     ingredients: p.ingredients || '',
     allergens: p.allergens || '',
@@ -91,7 +91,7 @@ export default function AdminProducts() {
       shortDescription: form.shortDescription,
       description: form.description,
       prepTime: form.prepTime,
-      flavors: form.flavors.split(',').map((s) => s.trim()).filter(Boolean),
+      flavors: form.flavors.split(/[،,]/).map((s) => s.trim()).filter(Boolean),
       variants: form.variants
         .split('\n')
         .map((line) => line.trim())
@@ -113,7 +113,7 @@ export default function AdminProducts() {
     try {
       if (editing === 'new') await api.post('/admin/products', payload);
       else await api.put(`/admin/products/${editing}`, payload);
-      success('Product saved.');
+      success('محصول ذخیره شد.');
       setEditing(null);
       load();
     } catch (err) {
@@ -135,30 +135,30 @@ export default function AdminProducts() {
     <div>
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="h-display text-3xl">Products</h1>
-          <p className="mt-1 text-sm text-muted">{products.length} products in the catalog.</p>
+          <h1 className="h-display text-3xl">محصولات</h1>
+          <p className="mt-1 text-sm text-muted">{faNum(products.length)} محصول در فهرست.</p>
         </div>
         <button onClick={openNew} className="btn-dark">
-          <Plus className="h-4 w-4" /> New product
+          <Plus className="h-4 w-4" /> محصول جدید
         </button>
       </div>
 
       <input
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        placeholder="Search products…"
+        placeholder="جستجوی محصولات…"
         className="field mt-5 max-w-sm"
       />
 
       <div className="mt-5 card overflow-x-auto p-2">
-        <table className="w-full text-left text-sm">
-          <thead className="text-xs uppercase tracking-wide text-muted">
+        <table className="w-full text-start text-sm">
+          <thead className="text-xs text-muted">
             <tr>
-              <th className="p-3">Product</th>
-              <th className="p-3">Category</th>
-              <th className="p-3">Price</th>
-              <th className="p-3">Flags</th>
-              <th className="p-3 text-right">Actions</th>
+              <th className="p-3 text-start">محصول</th>
+              <th className="p-3 text-start">دسته‌بندی</th>
+              <th className="p-3 text-start">قیمت</th>
+              <th className="p-3 text-start">برچسب‌ها</th>
+              <th className="p-3 text-end">عملیات</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-cocoa/10">
@@ -169,7 +169,7 @@ export default function AdminProducts() {
                     <img src={p.image_url} alt="" className="h-10 w-10 rounded-xl object-cover" />
                     <div>
                       <p className="font-medium text-cocoa">{p.name}</p>
-                      <p className="text-xs text-muted">{p.slug}</p>
+                      <p className="text-xs text-muted ltr text-start">{p.slug}</p>
                     </div>
                   </div>
                 </td>
@@ -177,20 +177,20 @@ export default function AdminProducts() {
                 <td className="p-3 font-semibold">{money(p.price_cents, symbol)}</td>
                 <td className="p-3">
                   <div className="flex flex-wrap gap-1">
-                    {p.is_featured && <span className="chip bg-lavender">Featured</span>}
-                    {p.is_bestseller && <span className="chip bg-cocoa text-cream">Best</span>}
-                    {p.is_seasonal && <span className="chip bg-strawberry">Seasonal</span>}
-                    {!p.in_stock && <span className="chip bg-muted/20 text-muted">Sold out</span>}
+                    {p.is_featured && <span className="chip bg-lavender">ویژه</span>}
+                    {p.is_bestseller && <span className="chip bg-cocoa text-cream">پرفروش</span>}
+                    {p.is_seasonal && <span className="chip bg-strawberry">فصلی</span>}
+                    {!p.in_stock && <span className="chip bg-muted/20 text-muted">ناموجود</span>}
                   </div>
                 </td>
                 <td className="p-3">
                   <div className="flex justify-end gap-2">
-                    <button onClick={() => openEdit(p)} aria-label={`Edit ${p.name}`} className="grid h-8 w-8 place-items-center rounded-full hover:bg-blush/60">
+                    <button onClick={() => openEdit(p)} aria-label={`ویرایش ${p.name}`} className="grid h-8 w-8 place-items-center rounded-full hover:bg-blush/60">
                       <Pencil className="h-4 w-4" />
                     </button>
                     <button
                       onClick={() => toggleArchive(p)}
-                      aria-label={p.archived ? `Restore ${p.name}` : `Archive ${p.name}`}
+                      aria-label={p.archived ? `بازگردانی ${p.name}` : `بایگانی ${p.name}`}
                       className="grid h-8 w-8 place-items-center rounded-full hover:bg-blush/60"
                     >
                       {p.archived ? <RotateCcw className="h-4 w-4" /> : <Archive className="h-4 w-4" />}
@@ -208,27 +208,27 @@ export default function AdminProducts() {
           <div className="h-full w-full max-w-2xl overflow-y-auto rounded-none bg-cream p-6 shadow-soft sm:rounded-4xl">
             <div className="flex items-center justify-between">
               <h2 className="font-display text-2xl font-semibold">
-                {editing === 'new' ? 'New product' : 'Edit product'}
+                {editing === 'new' ? 'محصول جدید' : 'ویرایش محصول'}
               </h2>
-              <button onClick={() => setEditing(null)} aria-label="Close editor">
+              <button onClick={() => setEditing(null)} aria-label="بستن ویرایشگر">
                 <X className="h-5 w-5" />
               </button>
             </div>
 
             <form onSubmit={save} className="mt-6 space-y-4">
               <div>
-                <label className="label" htmlFor="ap-name">Name</label>
+                <label className="label" htmlFor="ap-name">نام</label>
                 <input id="ap-name" required value={form.name} onChange={set('name')} className="field" />
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
-                  <label className="label" htmlFor="ap-price">Price ({symbol})</label>
-                  <input id="ap-price" required type="number" step="0.01" value={form.price} onChange={set('price')} className="field" />
+                  <label className="label" htmlFor="ap-price">قیمت ({symbol})</label>
+                  <input id="ap-price" required type="number" step="0.01" value={form.price} onChange={set('price')} className="field ltr" />
                 </div>
                 <div>
-                  <label className="label" htmlFor="ap-cat">Category</label>
+                  <label className="label" htmlFor="ap-cat">دسته‌بندی</label>
                   <select id="ap-cat" value={form.categoryId} onChange={set('categoryId')} className="field">
-                    <option value="">None</option>
+                    <option value="">هیچ‌کدام</option>
                     {categories.map((c) => (
                       <option key={c.id} value={c.id}>{c.name}</option>
                     ))}
@@ -236,52 +236,52 @@ export default function AdminProducts() {
                 </div>
               </div>
               <div>
-                <label className="label" htmlFor="ap-image">Image URL</label>
-                <input id="ap-image" value={form.imageUrl} onChange={set('imageUrl')} className="field" />
+                <label className="label" htmlFor="ap-image">نشانی تصویر</label>
+                <input id="ap-image" value={form.imageUrl} onChange={set('imageUrl')} className="field ltr" />
               </div>
               <div>
-                <label className="label" htmlFor="ap-short">Short description</label>
+                <label className="label" htmlFor="ap-short">توضیح کوتاه</label>
                 <input id="ap-short" value={form.shortDescription} onChange={set('shortDescription')} className="field" />
               </div>
               <div>
-                <label className="label" htmlFor="ap-desc">Full description</label>
+                <label className="label" htmlFor="ap-desc">توضیح کامل</label>
                 <textarea id="ap-desc" rows={3} value={form.description} onChange={set('description')} className="field" />
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
-                  <label className="label" htmlFor="ap-prep">Preparation time</label>
+                  <label className="label" htmlFor="ap-prep">زمان آماده‌سازی</label>
                   <input id="ap-prep" value={form.prepTime} onChange={set('prepTime')} className="field" />
                 </div>
                 <div>
-                  <label className="label" htmlFor="ap-flavors">Flavours (comma separated)</label>
+                  <label className="label" htmlFor="ap-flavors">طعم‌ها (با کاما جدا شوند)</label>
                   <input id="ap-flavors" value={form.flavors} onChange={set('flavors')} className="field" />
                 </div>
               </div>
               <div>
-                <label className="label" htmlFor="ap-variants">Variants — one per line, <code>Label|price</code></label>
-                <textarea id="ap-variants" rows={3} value={form.variants} onChange={set('variants')} className="field font-mono text-xs" placeholder={'Box of 6|18.00\nBox of 12|33.00'} />
+                <label className="label" htmlFor="ap-variants">گونه‌ها — هر خط یکی، برچسب|قیمت</label>
+                <textarea id="ap-variants" rows={3} value={form.variants} onChange={set('variants')} className="field ltr font-mono text-xs" placeholder={'جعبه ۶ عددی|18.00\nجعبه ۱۲ عددی|33.00'} />
               </div>
               <div>
-                <label className="label" htmlFor="ap-ing">Ingredients</label>
+                <label className="label" htmlFor="ap-ing">مواد اولیه</label>
                 <textarea id="ap-ing" rows={2} value={form.ingredients} onChange={set('ingredients')} className="field" />
               </div>
               <div>
-                <label className="label" htmlFor="ap-allerg">Allergens</label>
+                <label className="label" htmlFor="ap-allerg">آلرژن‌ها</label>
                 <textarea id="ap-allerg" rows={2} value={form.allergens} onChange={set('allergens')} className="field" />
               </div>
               <div>
-                <label className="label" htmlFor="ap-storage">Storage</label>
+                <label className="label" htmlFor="ap-storage">نگهداری</label>
                 <input id="ap-storage" value={form.storage} onChange={set('storage')} className="field" />
               </div>
 
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
                 {[
-                  ['isFeatured', 'Featured'],
-                  ['isBestseller', 'Bestseller'],
-                  ['isSeasonal', 'Seasonal'],
-                  ['isNew', 'New'],
-                  ['inStock', 'In stock'],
-                  ['isCustomizable', 'Customisable'],
+                  ['isFeatured', 'ویژه'],
+                  ['isBestseller', 'پرفروش'],
+                  ['isSeasonal', 'فصلی'],
+                  ['isNew', 'جدید'],
+                  ['inStock', 'موجود'],
+                  ['isCustomizable', 'قابل شخصی‌سازی'],
                 ].map(([key, label]) => (
                   <label key={key} className="flex items-center gap-2 rounded-2xl bg-white p-3 text-sm ring-1 ring-cocoa/10">
                     <input type="checkbox" checked={form[key]} onChange={set(key)} className="h-4 w-4 accent-rose" />
@@ -292,10 +292,10 @@ export default function AdminProducts() {
 
               <div className="flex gap-3 pt-2">
                 <button type="submit" disabled={busy} className="btn-dark">
-                  {busy ? 'Saving…' : 'Save product'}
+                  {busy ? 'در حال ذخیره…' : 'ذخیره محصول'}
                 </button>
                 <button type="button" onClick={() => setEditing(null)} className="btn-ghost">
-                  Cancel
+                  انصراف
                 </button>
               </div>
             </form>

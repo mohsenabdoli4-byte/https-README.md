@@ -50,7 +50,7 @@ router.get('/products', async (_req, res) => {
 router.post('/products', async (req, res) => {
   const b = req.body || {};
   if (!b.name || b.priceCents == null)
-    return res.status(400).json({ error: 'Name and price are required.' });
+    return res.status(400).json({ error: 'نام و قیمت الزامی است.' });
   const slug = (b.slug || b.name)
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
@@ -128,7 +128,7 @@ router.put('/products/:id', async (req, res) => {
       req.params.id,
     ]
   );
-  if (!rows[0]) return res.status(404).json({ error: 'Product not found.' });
+  if (!rows[0]) return res.status(404).json({ error: 'محصول پیدا نشد.' });
   res.json({ product: rows[0] });
 });
 
@@ -167,7 +167,7 @@ router.patch('/orders/:id', async (req, res) => {
      WHERE id = $4 RETURNING *`,
     [status ?? null, paymentStatus ?? null, cancelReason ?? null, req.params.id]
   );
-  if (!rows[0]) return res.status(404).json({ error: 'Order not found.' });
+  if (!rows[0]) return res.status(404).json({ error: 'سفارش پیدا نشد.' });
   res.json({ order: rows[0] });
 });
 
@@ -187,7 +187,7 @@ router.get('/settings', async (_req, res) => {
 router.put('/settings/:key', async (req, res) => {
   const allowed = ['brand', 'contact', 'commerce', 'announcement', 'content'];
   if (!allowed.includes(req.params.key))
-    return res.status(400).json({ error: 'Unknown settings group.' });
+    return res.status(400).json({ error: 'گروه تنظیمات ناشناخته است.' });
   const value = await setSetting(req.params.key, req.body);
   res.json({ key: req.params.key, value });
 });
@@ -201,7 +201,7 @@ router.get('/promotions', async (_req, res) => {
 router.post('/promotions', async (req, res) => {
   const { code, kind = 'percent', value, minSubtotalCents = 0, expiresAt, usageLimit } = req.body || {};
   if (!code || value == null)
-    return res.status(400).json({ error: 'Code and value are required.' });
+    return res.status(400).json({ error: 'کد و مقدار الزامی است.' });
   const { rows } = await query(
     `INSERT INTO promotions (code, kind, value, min_subtotal_cents, expires_at, usage_limit, active)
      VALUES (upper($1),$2,$3,$4,$5,$6,true) RETURNING *`,
@@ -232,7 +232,7 @@ router.get('/testimonials', async (_req, res) => {
 
 router.post('/testimonials', async (req, res) => {
   const { name, location, rating = 5, body } = req.body || {};
-  if (!name || !body) return res.status(400).json({ error: 'Name and body are required.' });
+  if (!name || !body) return res.status(400).json({ error: 'نام و متن الزامی است.' });
   const { rows } = await query(
     `INSERT INTO testimonials (name, location, rating, body, is_sample, approved)
      VALUES ($1,$2,$3,$4,true,true) RETURNING *`,

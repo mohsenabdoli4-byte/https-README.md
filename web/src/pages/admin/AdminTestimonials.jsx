@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Plus, Trash2 } from 'lucide-react';
 import { api } from '../../lib/api.js';
+import { faNum } from '../../lib/format.js';
 import { useToast } from '../../context/ToastContext.jsx';
 import StarRating from '../../components/StarRating.jsx';
 
@@ -20,7 +21,7 @@ export default function AdminTestimonials() {
     setBusy(true);
     try {
       await api.post('/admin/testimonials', form);
-      success('Testimonial added.');
+      success('نظر افزوده شد.');
       setForm({ name: '', location: '', rating: 5, body: '' });
       load();
     } catch (err) {
@@ -42,9 +43,9 @@ export default function AdminTestimonials() {
 
   return (
     <div>
-      <h1 className="h-display text-3xl">Testimonials</h1>
+      <h1 className="h-display text-3xl">نظرات مشتریان</h1>
       <p className="mt-1 text-sm text-muted">
-        New stores show sample testimonials, clearly labelled, until real customer reviews arrive.
+        فروشگاه‌های تازه تا رسیدن نظرات واقعی، نظرات نمونه را با برچسب مشخص نمایش می‌دهند.
       </p>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_360px]">
@@ -58,11 +59,11 @@ export default function AdminTestimonials() {
                 </div>
                 <div className="flex items-center gap-3">
                   <StarRating value={t.rating} />
-                  {t.is_sample && <span className="chip bg-butter/70 text-cocoa">Sample</span>}
+                  {t.is_sample && <span className="chip bg-butter/70 text-cocoa">نمونه</span>}
                   <button onClick={() => toggle(t)} className={`chip ${t.approved ? 'bg-mint' : 'bg-muted/20 text-muted'}`}>
-                    {t.approved ? 'Visible' : 'Hidden'}
+                    {t.approved ? 'نمایش' : 'پنهان'}
                   </button>
-                  <button onClick={() => remove(t)} aria-label={`Delete testimonial from ${t.name}`} className="text-muted hover:text-rose">
+                  <button onClick={() => remove(t)} aria-label={`حذف نظر از ${t.name}`} className="text-muted hover:text-rose">
                     <Trash2 className="h-4 w-4" />
                   </button>
                 </div>
@@ -70,36 +71,36 @@ export default function AdminTestimonials() {
               <p className="mt-3 text-sm text-cocoa/80">{t.body}</p>
             </div>
           ))}
-          {items.length === 0 && <div className="card p-8 text-sm text-muted">No testimonials yet.</div>}
+          {items.length === 0 && <div className="card p-8 text-sm text-muted">هنوز نظری ثبت نشده است.</div>}
         </div>
 
         <form onSubmit={create} className="card h-fit p-6">
-          <h2 className="font-display text-xl font-semibold">Add a testimonial</h2>
-          <p className="mt-1 text-xs text-muted">Marked as a sample until real reviews replace it.</p>
+          <h2 className="font-display text-xl font-semibold">افزودن نظر</h2>
+          <p className="mt-1 text-xs text-muted">تا جایگزینی با نظرات واقعی، به‌عنوان نمونه علامت‌گذاری می‌شود.</p>
           <div className="mt-4 space-y-4">
             <div>
-              <label className="label" htmlFor="t-name">Name</label>
+              <label className="label" htmlFor="t-name">نام</label>
               <input id="t-name" required value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} className="field" />
             </div>
             <div>
-              <label className="label" htmlFor="t-loc">Location</label>
+              <label className="label" htmlFor="t-loc">منطقه</label>
               <input id="t-loc" value={form.location} onChange={(e) => setForm((f) => ({ ...f, location: e.target.value }))} className="field" />
             </div>
             <div>
-              <label className="label" htmlFor="t-rating">Rating</label>
+              <label className="label" htmlFor="t-rating">امتیاز</label>
               <select id="t-rating" value={form.rating} onChange={(e) => setForm((f) => ({ ...f, rating: Number(e.target.value) }))} className="field">
                 {[5, 4, 3, 2, 1].map((n) => (
-                  <option key={n} value={n}>{n} star{n > 1 ? 's' : ''}</option>
+                  <option key={n} value={n}>{faNum(n)} ستاره</option>
                 ))}
               </select>
             </div>
             <div>
-              <label className="label" htmlFor="t-body">Testimonial</label>
+              <label className="label" htmlFor="t-body">متن نظر</label>
               <textarea id="t-body" rows={4} required value={form.body} onChange={(e) => setForm((f) => ({ ...f, body: e.target.value }))} className="field" />
             </div>
           </div>
           <button type="submit" disabled={busy} className="btn-dark mt-5 w-full">
-            <Plus className="h-4 w-4" /> Add testimonial
+            <Plus className="h-4 w-4" /> افزودن نظر
           </button>
         </form>
       </div>

@@ -46,16 +46,16 @@ body {
       placeholder:text-muted/70 focus:border-rose focus:outline-none;
   }
   .label {
-    @apply mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted;
+    @apply mb-1.5 block text-xs font-semibold text-muted;
   }
   .chip {
     @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold;
   }
   .eyebrow {
-    @apply text-xs font-bold uppercase tracking-[0.28em] text-rose;
+    @apply text-xs font-bold text-rose;
   }
   .h-display {
-    @apply font-display font-semibold leading-[1.02] tracking-tight;
+    @apply font-display font-semibold leading-[1.3] tracking-normal;
   }
 }
 
@@ -75,6 +75,11 @@ body {
   .no-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
+  }
+  /* Keep emails, phone numbers, URLs and codes readable inside RTL text. */
+  .ltr {
+    direction: ltr;
+    unicode-bidi: isolate;
   }
 }
 
